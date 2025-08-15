@@ -1,0 +1,117 @@
+import { Image } from "@/components/Image/Image";
+import { Hero } from "@/features/Hero/Hero";
+import { Team } from "@/features/Team/Team";
+import { AsideSectionNavigation } from "@/features/AsideSectionNavigation/AsideSectionNavigation";
+import { Services } from "@/features/Services/Services";
+import { Treatments } from "@/features/Treatments/Treatments";
+import { FAQ } from "@/features/FAQ/FAQ";
+import { Contact } from "@/features/Contact/Contact";
+
+export default function Home() {
+  return (
+    <div className="main-grid">
+      <Hero
+        title="Uw gebit, is onze passie."
+        description="wij bieden persoonlijke, deskundige zorg voor jong en oud."
+        uspItems={[{ content: "Hoge kwaliteit" }, { content: "Snel geholpen" }]}
+      />
+      <div className="subgrid full-width-section lg:content-section lg:flex lg:gap-60">
+        <AsideSectionNavigation
+          title="Op deze pagina"
+          navigationItems={[
+            { text: "Over ons", slug: "#over-ons" },
+            { text: "Onze diensten", slug: "#onze-diensten" },
+            { text: "Veelgestelde vragen", slug: "#veelgestelde-vragen" },
+            { text: "Contact", slug: "#contact" },
+          ]}
+        />
+        <div className="subgrid full-width-section gap-y-40 lg:flex lg:flex-1 lg:flex-col lg:gap-y-60">
+          <Team
+            className="content-section"
+            title="Ons team"
+            description="Ons kleine, toegewijde team staat elke dag met passie en persoonlijke aandacht voor u klaar. Uw comfort en tevredenheid staan bij ons voorop!"
+            teamMembers={[
+              {
+                name: "Ryan Oehlers",
+                jobtitle: "Tandarts BIG nr. 99046523802",
+              },
+              {
+                name: "Isabel Hartog",
+                jobtitle: "Praktijkmanager / tandartsassistente",
+              },
+              {
+                name: "Judith Engel",
+                jobtitle: "Tandartsassistente",
+              },
+            ]}
+          />
+          <Services
+            className="content-section"
+            title="Onze diensten"
+            description="Vanuit het keurmerk KNMT communiceren alle aangesloten tandartsen een
+            lijst van eventueel bijkomende tarieven. Hiermee hopen wij onze
+            dienstverlening transparant te houden voor onze patiënten."
+            buttonText="Indicatie kosten overzicht"
+          />
+          <Treatments
+            className="content-section"
+            title="Behandelingen"
+            treatments={[
+              {
+                title: "Wortelkanaal behandeling",
+                description: "CONTENT GOES HERE",
+              },
+              {
+                title: "Bleken",
+                description: "CONTENT GOES HERE",
+              },
+              {
+                title: "Reguliere controle",
+                description:
+                  "CONTENT GOES HERE CONTENT GOES HERE CONTENT GOES HERE CONTENT GOES HERE CONTENT GOES HERE CONTENT GOES HERE  CONTENT GOES HERE CONTENT GOES HERE CONTENT GOES HERECONTENT GOES HERE CONTENT GOES HERE CONTENT GOES HERE CONTENT GOES HERE CONTENT GOES HERE CONTENT GOES HERE",
+              },
+            ]}
+          />
+          <Image
+            src="/hero.png"
+            alt="Afbeelding van de paktijk"
+            aspectRatio="landscape"
+            borderRadius={24}
+            className="content-section hidden lg:block"
+          />
+          <div className="subgrid full-width-section bg-primary py-40 pb-[150px] lg:block lg:bg-transparent lg:p-0">
+            <FAQ
+              className="content-section"
+              title="Vragen? Wij helpen je graag op weg!"
+              faqItems={[
+                {
+                  title: "Is er parkeergelegenheid voor de deur?",
+                  description: "Ja",
+                },
+                {
+                  title: "Bij pijn klachten wie moet ik bellen?",
+                  description:
+                    "Maandag tot en met donderdag zijn wij bereikbaar van 08:00 tot 12:00 en van 13:00 tot 17:00. In het weekend kan je bellen naar de mondzorgpolie 088-2632727",
+                },
+              ]}
+            />
+          </div>
+          <Image
+            src="/hero.png"
+            alt="Afbeelding van de paktijk"
+            aspectRatio="landscape"
+            borderRadius={24}
+            className="content-section mt-[-140px] lg:hidden"
+          />
+          <Contact
+            className="content-section"
+            title="Contact"
+            description="Onze praktijk is geopend tussen 08:00 en 17:00 op maandag tot en met donerdag."
+            phoneNumber="020 482 3573"
+            email="info@tandartsoehlers.nl"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}

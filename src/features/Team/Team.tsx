@@ -18,7 +18,11 @@ export const Team = ({
   ...props
 }: TeamProps) => {
   return (
-    <div className={twMerge("flex flex-col gap-30", className)} {...props}>
+    <div
+      id="feature-team"
+      className={twMerge("flex flex-col gap-30", className)}
+      {...props}
+    >
       <div className="flex flex-col gap-15 text-center lg:text-left">
         <h2 className="typography-headline-2">{title}</h2>
         <p className="typography-body">{description}</p>

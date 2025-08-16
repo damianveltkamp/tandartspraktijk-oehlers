@@ -14,7 +14,10 @@ interface FAQProps {
 
 export const FAQ = ({ title, faqItems, className }: FAQProps) => {
   return (
-    <div className={twMerge("flex flex-col gap-30", className)}>
+    <div
+      id="feature-faq"
+      className={twMerge("flex flex-col gap-30", className)}
+    >
       <h2 className="typography-headline-2">{title}</h2>
       <Accordion items={faqItems} />
     </div>

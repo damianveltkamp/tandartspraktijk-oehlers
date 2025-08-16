@@ -24,9 +24,9 @@ export const Accordion = ({ items }: AccordionProps) => {
           className="group rounded-8 flex flex-col content-center overflow-hidden border"
         >
           <RadixAccordion.Header>
-            <RadixAccordion.Trigger className="typography-body-emphasized flex w-full items-center justify-between p-20 text-left">
+            <RadixAccordion.Trigger className="typography-body-emphasized flex w-full items-center justify-between p-20 text-left hover:cursor-pointer">
               <span>{title}</span>
-              <ChevronDown />
+              <ChevronDown className="duration-300 ease-[var(--animation-timing-smooth)] group-data-[state=open]:-rotate-180" />
             </RadixAccordion.Trigger>
           </RadixAccordion.Header>
           <RadixAccordion.Content className="data-[state=open]:animate-radixAccordionSlideDown data-[state=closed]:animate-radixAccordionSlideUp px-20">

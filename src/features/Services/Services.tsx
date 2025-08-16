@@ -17,6 +17,7 @@ export const Services = ({
 }: ServicesProps) => {
   return (
     <div
+      id="feature-services"
       className={twMerge(
         "flex flex-col gap-30 text-center lg:text-left",
         className,

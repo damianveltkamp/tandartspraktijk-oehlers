@@ -19,10 +19,11 @@ export default function Home() {
         <AsideSectionNavigation
           title="Op deze pagina"
           navigationItems={[
-            { text: "Over ons", slug: "#over-ons" },
-            { text: "Onze diensten", slug: "#onze-diensten" },
-            { text: "Veelgestelde vragen", slug: "#veelgestelde-vragen" },
+            { text: "Ons team", slug: "#feature-team" },
+            { text: "Onze diensten", slug: "#feature-services" },
+            { text: "Veelgestelde vragen", slug: "#feature-faq" },
             { text: "Contact", slug: "#contact" },
+            { text: "Spoeddienst", slug: "#emergency-contact" },
           ]}
         />
         <div className="subgrid full-width-section gap-y-40 lg:flex lg:flex-1 lg:flex-col lg:gap-y-60">
@@ -104,11 +105,40 @@ export default function Home() {
             className="content-section mt-[-140px] lg:hidden"
           />
           <Contact
+            id="contact"
             className="content-section"
             title="Contact"
             description="Onze praktijk is geopend tussen 08:00 en 17:00 op maandag tot en met donerdag."
-            phoneNumber="020 482 3573"
-            email="info@tandartsoehlers.nl"
+            contactDetails={{
+              phoneNumber: {
+                title: "020 482 3573",
+                url: "020 482 3573",
+              },
+              email: {
+                title: "info@tandartsoehlers.nl",
+                url: "info@tandartsoehlers.nl",
+              },
+            }}
+          />
+          <Contact
+            id="emergency-contact"
+            className="content-section"
+            title="Spoeddienst"
+            description="In geval van pijnklachten die niet kunnen wachten en nabloedingen, kunt u telefonisch contact opnemen met de mondzorgpoli. De mondzorgpoli is 24/7 telefonisch bereikbaar."
+            contactDetails={{
+              phoneNumber: {
+                title: "020 482 3573",
+                url: "020 482 3573",
+              },
+              location: {
+                title: "Louwesweg 6, 1066 EC Amsterdam",
+                url: "https://www.google.com/maps/place/Louwesweg+6,+1066+EC+Amsterdam/@52.3482414,4.8239776,19z/data=!3m1!4b1!4m6!3m5!1s0x47c5e22801e05031:0x503c1e32110c8b6c!8m2!3d52.3482414!4d4.8246213!16s%2Fg%2F11vx4548_t?entry=ttu&g_ep=EgoyMDI1MDgxMy4wIKXMDSoASAFQAw%3D%3D",
+              },
+              website: {
+                title: "mondzorgpoli.nl",
+                url: "https://www.mondzorgpoli.nl/",
+              },
+            }}
           />
         </div>
       </div>

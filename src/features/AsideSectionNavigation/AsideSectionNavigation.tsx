@@ -21,7 +21,7 @@ export const AsideSectionNavigation = ({
         <ul className="flex flex-col gap-20">
           {navigationItems.map(({ text, slug }) => (
             <li key={slug} className="border-b-1 border-b-black">
-              <a href="{slug}" className="typography-body flex justify-between">
+              <a href={slug} className="typography-body flex justify-between">
                 {text}
                 <ArrowRight />
               </a>

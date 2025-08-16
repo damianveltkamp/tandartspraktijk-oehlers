@@ -18,7 +18,10 @@ export const Treatments = ({
   className,
 }: TreatmentsProps) => {
   return (
-    <div className={twMerge("flex flex-col gap-30", className)}>
+    <div
+      id="feature-treatments"
+      className={twMerge("flex flex-col gap-30", className)}
+    >
       <h2 className="typography-headline-2">{title}</h2>
       <Accordion items={treatments} />
     </div>

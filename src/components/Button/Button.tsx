@@ -1,18 +1,11 @@
 import { cva } from "class-variance-authority";
-import type { ButtonHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
-import type { LinkProps } from "@/components/Link/Link";
 import { Link } from "@/components/Link/Link";
-
-type ButtonVariants = "blackGhost" | "primary" | "secondary";
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, Props {}
-interface LinkButtonProps extends LinkProps, Props {}
-
-interface Props {
-  fullWidth?: boolean;
-  variant?: ButtonVariants;
-}
+import type {
+  ButtonProps,
+  ButtonVariants,
+  LinkButtonProps,
+} from "./Button.types";
 
 const variants = cva(
   "inline-block py-15 px-40 rounded-8 typography-body hover:cursor-pointer",
@@ -24,6 +17,8 @@ const variants = cva(
           "bg-transparent border-[2px] border-black hocus:outline-2 hocus:outline-black hocus:outline-offset-2",
         secondary:
           "bg-secondary hocus:outline-2 hocus:outline-secondary hocus:outline-offset-2",
+        contrasting:
+          "bg-gray-400 hocus:outline-2 hocus:outline-secondary hocus:outline-offset-2",
       },
       fullWidth: {
         true: "w-full",

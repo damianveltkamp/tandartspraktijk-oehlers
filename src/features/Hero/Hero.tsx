@@ -1,4 +1,5 @@
-import { Button } from "@/components/Button/Button";
+import { Button, LinkButton } from "@/components/Button/Button";
+import type { LinkButtonProps } from "@/components/Button/Button.types";
 import { Image } from "@/components/Image/Image";
 import { CircleCheck } from "lucide-react";
 
@@ -8,11 +9,17 @@ interface USPItem {
 
 interface HeroProps {
   description: string;
+  linkButtons?: LinkButtonProps[];
   title: string;
   uspItems: USPItem[];
 }
 
-export const Hero = ({ title, description, uspItems }: HeroProps) => {
+export const Hero = ({
+  title,
+  description,
+  uspItems,
+  linkButtons,
+}: HeroProps) => {
   return (
     <>
       <div className="full-width-section subgrid bg-primary gap-y-25 pt-40 pb-150 md:p-0">
@@ -38,16 +45,14 @@ export const Hero = ({ title, description, uspItems }: HeroProps) => {
               </ul>
             )}
           </div>
-          <div className="content-section m-auto flex w-max flex-col gap-10 md:m-0">
-            {/* TODO: scroll to the contact section on the page. */}
-            <Button variant="blackGhost" fullWidth>
-              Kom in contact met ons
-            </Button>
-            {/* TODO: link this button to the inschrijven page. */}
-            <Button variant="secondary" fullWidth>
-              Inschrijven als patient
-            </Button>
-          </div>
+          {linkButtons && (
+            <div className="content-section m-auto flex w-max flex-col gap-10 md:m-0">
+              {/* TODO: refactor key here to the ID we will be getting from CMS. */}
+              {linkButtons.map((props, index) => (
+                <LinkButton key={index} {...props} fullWidth={true} />
+              ))}
+            </div>
+          )}
         </div>
         <Image
           src="/hero.png"

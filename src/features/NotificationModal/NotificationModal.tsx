@@ -8,6 +8,12 @@ interface NotificationModalProps {
   title: string;
 }
 
+/**
+ * @component NotificationModal
+ * @client
+ *
+ * NotificationModal contains all logic in order to show important notifications to the user.
+ */
 export const NotificationModal = ({
   title,
   description,
@@ -30,7 +36,7 @@ export const NotificationModal = ({
     <Dialog.Root open={isOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="bg-overlay animate-radixDialogOverlayShow fixed inset-0 z-50" />
-        <Dialog.Content className="animate-radixDialogContentShow fixed top-1/2 left-1/2 z-50 w-[calc(100%-40px)] -translate-x-1/2 -translate-y-1/2">
+        <Dialog.Content className="animate-radixDialogContentShow fixed top-1/2 left-1/2 z-50 w-[calc(100%-40px)] max-w-[650px] -translate-x-1/2 -translate-y-1/2">
           <div className="rounded-t-8 bg-primary flex justify-between gap-40 p-20">
             <Dialog.Title className="typography-headline-2">
               {title}

@@ -1,3 +1,4 @@
+import { EnrollOverlay } from "@/features/EnrollOverlay/EnrollOverlay";
 import { Image } from "@/components/Image/Image";
 import { Hero } from "@/features/Hero/Hero";
 import { Team } from "@/features/Team/Team";
@@ -14,6 +15,20 @@ export default function Home() {
         title="Uw gebit, is onze passie."
         description="wij bieden persoonlijke, deskundige zorg voor jong en oud."
         uspItems={[{ content: "Hoge kwaliteit" }, { content: "Snel geholpen" }]}
+        linkButtons={[
+          {
+            isExternal: false,
+            href: "#contact",
+            children: "Kom in contact met ons",
+            variant: "blackGhost",
+          },
+          {
+            isExternal: false,
+            href: "/inschrijven",
+            children: "Inschrijven als patient",
+            variant: "secondary",
+          },
+        ]}
       />
       <div className="subgrid full-width-section lg:content-section lg:flex lg:gap-60">
         <AsideSectionNavigation
@@ -142,6 +157,8 @@ export default function Home() {
           />
         </div>
       </div>
+      {/* TODO: create enroll overlay. */}
+      <EnrollOverlay />
     </div>
   );
 }

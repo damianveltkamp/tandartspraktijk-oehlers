@@ -1,9 +1,5 @@
 import NextLink from "next/link";
-import type { AnchorHTMLAttributes } from "react";
-
-export interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
-  isExternal: boolean;
-}
+import type { LinkProps } from "./Link.types";
 
 export const Link = ({ href, children, isExternal, ...props }: LinkProps) => {
   return isExternal ? (

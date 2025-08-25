@@ -101,6 +101,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
         {/* TODO: add the input label texts inside a dictionary within our cms. Or we just create a local json file. */}
         <div>
           {/* TODO: create wrapper component for this so we dont have to write so much personaliaFirstName. */}
+          {/* TODO: add autocomplete functionality based on googles saved data. Check what you impelemented on the Maandag project.*/}
           <Input
             required
             label="Firstname"

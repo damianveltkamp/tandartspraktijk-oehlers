@@ -14,7 +14,6 @@ export const enrollValidationSchema = z
     addressHouseNumber: validateRequiredString(
       "Huisnummer moet ingevuld worden.",
     ),
-    addressHouseNumberAddition: z.string(),
     // TODO: Add postalcode validation
     addressPostalCode: validateRequiredString("Postcode moet ingevuld worden."),
     addressStreet: validateRequiredString("Straatnaam moet ingevuld worden."),
@@ -43,7 +42,6 @@ export const enrollValidationSchema = z
       const phoneCountry = data.personaliaPhoneCountry as CountryCode;
       const phone = `${data.personaliaPhone}`;
       const isValid = isValidPhoneNumber(phone, phoneCountry);
-      console.log("IS VALID PHONENUMBER + COUNTRY COMBO? ", isValid);
       return isValid;
     },
     {

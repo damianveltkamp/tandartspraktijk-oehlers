@@ -13,5 +13,4 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
   options: SelectOption[];
   register: UseFormRegisterReturn;
-  required?: boolean;
 }

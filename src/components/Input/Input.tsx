@@ -10,7 +10,6 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   inputKey: string;
   label: string;
   register: UseFormRegisterReturn;
-  required?: boolean;
 }
 
 export const Input = ({

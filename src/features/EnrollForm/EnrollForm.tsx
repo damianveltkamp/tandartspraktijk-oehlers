@@ -14,6 +14,8 @@ import type { CountryCode } from "libphonenumber-js";
 import { getCountries, getCountryCallingCode } from "libphonenumber-js";
 import { Select } from "@/components/Select/Select";
 import type { SelectOption } from "@/components/Select/Select.types";
+import { FORM_AUTOCOMPLETE } from "@/constants/form-autocomplete";
+import { Radio } from "@/components/Radio/Radio";
 
 interface EnrollFormProps {
   className?: string;
@@ -37,7 +39,6 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
     mode: "onSubmit",
     defaultValues: {
       addressHouseNumber: "",
-      addressHouseNumberAddition: "",
       addressPostalCode: "",
       addressStreet: "",
       adressPlaceName: "",
@@ -49,19 +50,18 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
       personaliaPhone: "",
       specialMessage: "",
     },
-    // TODO: check why typescript complains in line below.
     resolver: zodResolver(enrollValidationSchema),
   });
 
   const INPUTKEYS: SelfMappedRecord<Inputs> = {
     addressHouseNumber: "addressHouseNumber",
-    addressHouseNumberAddition: "addressHouseNumberAddition",
     addressPostalCode: "addressPostalCode",
     addressStreet: "addressStreet",
     adressPlaceName: "adressPlaceName",
     personaliaDateOfBirth: "personaliaDateOfBirth",
     personaliaEmail: "personaliaEmail",
     personaliaFirstName: "personaliaFirstName",
+    personaliaGender: "personaliaGender",
     personaliaInfix: "personaliaInfix",
     personaliaLastname: "personaliaLastname",
     personaliaPhone: "personaliaPhone",
@@ -96,11 +96,39 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
       noValidate
       className={twMerge("flex flex-col gap-40 lg:gap-60", className)}
     >
-      <fieldset className="grid grid-cols-1 gap-20 lg:grid-cols-2">
-        <Legend className="mb-20">Persoonsgegevens</Legend>
+      <section
+        className="grid grid-cols-1 gap-20 lg:grid-cols-2"
+        aria-labelledby="personalia-heading"
+      >
+        <h2
+          className="typography-headline-2 mb-20 lg:col-span-2"
+          id="personalia-heading"
+        >
+          Persoonsgegevens
+        </h2>
         {/* TODO: add the input label texts inside a dictionary within our cms. Or we just create a local json file. */}
+        <fieldset className="lg:col-span-2">
+          <legend className="typography-body mb-20">Geslacht</legend>
+          <div className="col-span-2 flex gap-15">
+            <Radio
+              className="flex-row"
+              label="Man"
+              value="man"
+              type="radio"
+              inputKey={INPUTKEYS.personaliaGender}
+              register={register(INPUTKEYS.personaliaGender)}
+            />
+            <Radio
+              className="flex-row"
+              label="Vrouw"
+              value="vrouw"
+              type="radio"
+              inputKey={INPUTKEYS.personaliaGender}
+              register={register(INPUTKEYS.personaliaGender)}
+            />
+          </div>
+        </fieldset>
         <div>
-          {/* TODO: create wrapper component for this so we dont have to write so much personaliaFirstName. */}
           {/* TODO: add autocomplete functionality based on googles saved data. Check what you impelemented on the Maandag project.*/}
           <Input
             required
@@ -108,6 +136,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
             inputKey={INPUTKEYS.personaliaFirstName}
             register={register(INPUTKEYS.personaliaFirstName)}
             errorMessage={errors.personaliaFirstName?.message}
+            autoComplete={FORM_AUTOCOMPLETE.personaliaFirstname}
           />
         </div>
         <div>
@@ -125,6 +154,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
             inputKey={INPUTKEYS.personaliaLastname}
             register={register(INPUTKEYS.personaliaLastname)}
             errorMessage={errors.personaliaLastname?.message}
+            autoComplete={FORM_AUTOCOMPLETE.personaliaLastname}
           />
         </div>
         <div>
@@ -136,6 +166,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
             inputKey={INPUTKEYS.personaliaDateOfBirth}
             register={register(INPUTKEYS.personaliaDateOfBirth)}
             errorMessage={errors.personaliaDateOfBirth?.message}
+            autoComplete={FORM_AUTOCOMPLETE.personaliaDateOfBirth}
           />
         </div>
         <div>
@@ -146,6 +177,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
             inputKey={INPUTKEYS.personaliaEmail}
             register={register(INPUTKEYS.personaliaEmail)}
             errorMessage={errors.personaliaEmail?.message}
+            autoComplete={FORM_AUTOCOMPLETE.personaliaEmail}
           />
         </div>
         <div className="flex flex-col gap-20 lg:flex-row">
@@ -174,9 +206,10 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
             inputKey={INPUTKEYS.personaliaPhone}
             register={register(INPUTKEYS.personaliaPhone)}
             errorMessage={errors.personaliaPhone?.message}
+            autoComplete={FORM_AUTOCOMPLETE.personaliaNationalPhoneNumber}
           />
         </div>
-      </fieldset>
+      </section>
       <fieldset className="flex flex-col gap-20">
         <Legend className="mb-20">Adresgegevens</Legend>
         <div className="grid grid-cols-1 gap-20 lg:grid-cols-2">
@@ -188,29 +221,21 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
               inputKey={INPUTKEYS.addressStreet}
               register={register(INPUTKEYS.addressStreet)}
               errorMessage={errors.addressStreet?.message}
+              autoComplete={FORM_AUTOCOMPLETE.addressStreetName}
             />
           </div>
           <div>
             <Input
               required
-              label="Huisnummer"
-              placeholder="Vul uw huisnummer in"
+              label="Huisnummer + toevoeging"
+              placeholder="Vul uw huisnummer + toevoeging in"
               inputKey={INPUTKEYS.addressHouseNumber}
               register={register(INPUTKEYS.addressHouseNumber)}
               errorMessage={errors.addressHouseNumber?.message}
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-20 lg:grid-cols-3">
-          <div>
-            <Input
-              label="Toevoeging"
-              placeholder="Vul uw huisnummer toevoeging in"
-              inputKey={INPUTKEYS.addressHouseNumberAddition}
-              register={register(INPUTKEYS.addressHouseNumberAddition)}
-              errorMessage={errors.addressHouseNumberAddition?.message}
-            />
-          </div>
+        <div className="grid grid-cols-1 gap-20 lg:grid-cols-2">
           <div>
             <Input
               required
@@ -219,6 +244,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
               inputKey={INPUTKEYS.addressPostalCode}
               register={register(INPUTKEYS.addressPostalCode)}
               errorMessage={errors.addressPostalCode?.message}
+              autoComplete={FORM_AUTOCOMPLETE.addressPostalCode}
             />
           </div>
           <div>
@@ -229,6 +255,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
               inputKey={INPUTKEYS.adressPlaceName}
               register={register(INPUTKEYS.adressPlaceName)}
               errorMessage={errors.adressPlaceName?.message}
+              autoComplete={FORM_AUTOCOMPLETE.addressPlaceName}
             />
           </div>
         </div>

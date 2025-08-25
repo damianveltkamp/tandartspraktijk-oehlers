@@ -1,12 +1,12 @@
 export type Inputs =
   | "addressHouseNumber"
-  | "addressHouseNumberAddition"
   | "addressPostalCode"
   | "addressStreet"
   | "adressPlaceName"
   | "personaliaDateOfBirth"
   | "personaliaEmail"
   | "personaliaFirstName"
+  | "personaliaGender"
   | "personaliaInfix"
   | "personaliaLastname"
   | "personaliaPhone"

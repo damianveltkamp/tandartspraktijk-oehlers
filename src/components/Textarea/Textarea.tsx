@@ -1,23 +1,22 @@
-import { extendedReactHookFormRegister } from "@/utils/extendedReactHookFormRegister";
-import { inputGetAriaDescribedBy } from "@/utils/getAriaDescribedBy";
-import type { InputHTMLAttributes } from "react";
+import type { TextareaHTMLAttributes } from "react";
 import type { UseFormRegisterReturn } from "react-hook-form";
-import { twMerge } from "tailwind-merge";
 import { InputLabel } from "../InputLabel/InputLabel";
 import {
   InputError,
   InputHint,
 } from "../InputAccessibility/InputAccessibility";
+import { inputGetAriaDescribedBy } from "@/utils/getAriaDescribedBy";
+import { extendedReactHookFormRegister } from "@/utils/extendedReactHookFormRegister";
+import { twMerge } from "tailwind-merge";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   errorMessage?: string;
   hintText?: string;
   inputKey: string;
   label: string;
   register: UseFormRegisterReturn;
 }
-
-export const Input = ({
+export const TextArea = ({
   label,
   inputKey,
   register,
@@ -26,7 +25,7 @@ export const Input = ({
   hintText,
   className,
   ...props
-}: InputProps) => {
+}: TextAreaProps) => {
   const hintTextId = `${inputKey}-help-text`;
   const errorTextId = `${inputKey}-error`;
 
@@ -37,8 +36,8 @@ export const Input = ({
         label={label}
         inputKey={inputKey}
       />
-      <input
-        className="rounded-8 bg-gray-100 p-10 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+      <textarea
+        className="rounded-8 min-h-[127px] w-full bg-gray-100 p-10"
         {...extendedReactHookFormRegister(inputKey, register)}
         required={required}
         {...props}

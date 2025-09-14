@@ -1,6 +1,5 @@
 "use client";
-import * as Dialog from "@radix-ui/react-dialog";
-import { CircleX } from "lucide-react";
+import * as Dialog from "@/components/Dialog/Dialog";
 import { useEffect, useState } from "react";
 
 interface NotificationModalProps {
@@ -35,24 +34,11 @@ export const NotificationModal = ({
   return (
     <Dialog.Root open={isOpen}>
       <Dialog.Portal>
-        <Dialog.Overlay className="bg-overlay animate-radixDialogOverlayShow fixed inset-0 z-50" />
-        <Dialog.Content className="animate-radixDialogContentShow fixed top-1/2 left-1/2 z-50 w-[calc(100%-40px)] max-w-[650px] -translate-x-1/2 -translate-y-1/2">
-          <div className="rounded-t-8 bg-primary flex justify-between gap-40 p-20">
-            <Dialog.Title className="typography-headline-2">
-              {title}
-            </Dialog.Title>
-            <button
-              className="h-fit hover:cursor-pointer"
-              aria-label="Close"
-              onClick={closeModal}
-            >
-              <CircleX />
-            </button>
-          </div>
-          <div className="rounded-b-8 bg-white p-20">
-            <Dialog.Description>{description}</Dialog.Description>
-          </div>
-        </Dialog.Content>
+        <Dialog.Overlay />
+        <Dialog.ContentContainer>
+          <Dialog.Header closeModal={closeModal} title={title} />
+          <Dialog.Content description={description}></Dialog.Content>
+        </Dialog.ContentContainer>
       </Dialog.Portal>
     </Dialog.Root>
   );

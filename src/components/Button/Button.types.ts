@@ -4,7 +4,6 @@ import type { LinkProps } from "../Link/Link.types";
 export type ButtonVariants = "blackGhost" | "primary" | "secondary";
 
 interface Props {
-  fullWidth?: boolean;
   variant?: ButtonVariants;
 }
 

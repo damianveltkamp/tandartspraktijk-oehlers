@@ -40,7 +40,6 @@ export const Services = ({
           href="/Indicatie-bijkomende-materiaal-en-techniekkosten-tandheelkundige-behandelingen.pdf"
           isExternal={false}
           variant="secondary"
-          fullWidth
         >
           {buttonText}
         </LinkButton>

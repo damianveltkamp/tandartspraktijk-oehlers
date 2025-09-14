@@ -9,6 +9,7 @@ export default {
   plugins: [
     plugin(function ({ addVariant, addUtilities }) {
       addVariant("hocus", ["&:hover", "&:focus"]);
+      addVariant("not-last", "&:not(:last-child)");
       addUtilities({
         ".main-grid": {
           "--main-grid-min-inline-space": "20px",

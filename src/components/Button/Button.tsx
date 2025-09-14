@@ -20,29 +20,21 @@ const variants = cva(
         contrasting:
           "bg-gray-400 hocus:outline-2 hocus:outline-secondary hocus:outline-offset-2",
       },
-      fullWidth: {
-        true: "w-full",
-        false: "w-fit",
-      },
     },
   },
 );
 
-const styles = (
-  variant: ButtonVariants,
-  fullWidth: boolean,
-  className: string | undefined,
-) => twMerge(variants({ variant, fullWidth, className }));
+const styles = (variant: ButtonVariants, className: string | undefined) =>
+  twMerge(variants({ variant, className }));
 
 export const Button = ({
   children,
   className,
   variant = "primary",
-  fullWidth = false,
   ...props
 }: ButtonProps) => {
   return (
-    <button className={styles(variant, fullWidth, className)} {...props}>
+    <button className={styles(variant, className)} {...props}>
       {children}
     </button>
   );
@@ -52,11 +44,10 @@ export const LinkButton = ({
   children,
   className,
   variant = "primary",
-  fullWidth = false,
   ...props
 }: LinkButtonProps) => {
   return (
-    <Link className={styles(variant, fullWidth, className)} {...props}>
+    <Link className={styles(variant, className)} {...props}>
       {children}
     </Link>
   );

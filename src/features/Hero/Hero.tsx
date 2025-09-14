@@ -49,7 +49,7 @@ export const Hero = ({
             <div className="content-section m-auto flex w-max flex-col gap-10 md:m-0">
               {/* TODO: refactor key here to the ID we will be getting from CMS. */}
               {linkButtons.map((props, index) => (
-                <LinkButton key={index} {...props} fullWidth={true} />
+                <LinkButton key={index} {...props} className="w-full" />
               ))}
             </div>
           )}

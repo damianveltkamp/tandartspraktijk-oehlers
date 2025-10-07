@@ -1,0 +1,216 @@
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { SubmitHandler } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import type { FormValues, PersonalInformationValues } from "./validation";
+import {
+  enrollValidationSchema,
+  familyMemberValidationSchema,
+} from "./validation";
+import { twMerge } from "tailwind-merge";
+import { FormErrors } from "@/components/FormErrors/FormErrors";
+import { RadioGroup } from "@/components/RadioGroup/RadioGroup";
+import { ADDFAMILYMEMBERFORMDEFAULTVALUES, INPUTKEYS } from "./constants";
+import { Button } from "@/components/Button/Button";
+import { AddFamilyMemberDialog } from "./components/AddFamilyMemberDialog/AddFamilyMemberDialog";
+import { PersonalInformation } from "./components/PersonalInformation/PersonalInformation";
+import { getCountryOptions } from "@/utils/getCountryCodes";
+import { useState } from "react";
+import { RequiredInputDescription } from "./components/RequiredInputDescription/RequiredInputDescription";
+
+interface EnrollFormProps {
+  className?: string;
+}
+
+/**
+ * @component EnrollForm
+ * @client
+ *
+ * EnrollForm contains all functionality to allow a user to send his/her personal information
+ * to send a request to enroll within our dental practice.
+ */
+export const EnrollForm = ({ className }: EnrollFormProps) => {
+  const [isAddFamilyMemberDialogOpen, setIsAddFamilyMemberDialogOpen] =
+    useState(false);
+  const [shouldUpdateFamilyMemberIndex, setShouldUpdateFamilyMemberIndex] =
+    useState<null | number>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+    setValue,
+    control,
+  } = useForm<FormValues>({
+    mode: "onSubmit",
+    defaultValues: {
+      addressHouseNumber: "",
+      addressPostalCode: "",
+      addressStreet: "",
+      adressPlaceName: "",
+      personaliaDateOfBirth: "",
+      personaliaEmail: "",
+      personaliaFirstName: "",
+      personaliaInfix: "",
+      personaliaLastname: "",
+      personaliaPhone: "",
+      specialMessage: "",
+      familyMembers: [],
+    },
+    resolver: zodResolver(enrollValidationSchema),
+  });
+
+  const {
+    fields,
+    append: appendFamilyMember,
+    update: updateFamilyMember,
+    remove,
+  } = useFieldArray({
+    control,
+    name: "familyMembers",
+  });
+
+  const addFamilyMemberForm = useForm<PersonalInformationValues>({
+    mode: "onSubmit",
+    defaultValues: ADDFAMILYMEMBERFORMDEFAULTVALUES,
+    resolver: zodResolver(familyMemberValidationSchema),
+  });
+
+  // TODO: handle submitting data. Send grid or some other integration.
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(data);
+  };
+
+  const formHasErrors = Object.keys(errors).length > 0;
+
+  const openAddFamilyMemberDialog = () => {
+    setIsAddFamilyMemberDialogOpen(true);
+  };
+
+  const closeAddFamilyMemberDialog = () => {
+    setIsAddFamilyMemberDialogOpen(false);
+  };
+
+  return (
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        className={twMerge("flex flex-col gap-40 lg:gap-60", className)}
+      >
+        <PersonalInformation
+          control={control}
+          countryOptions={getCountryOptions()}
+          errors={errors}
+          register={register}
+          setValue={setValue}
+          trigger={trigger}
+        />
+        <section
+          className="flex flex-col gap-20"
+          aria-labelledby="personalia-heading"
+        >
+          <h2
+            className="typography-headline-2 lg:col-span-2"
+            id="personalia-heading"
+          >
+            Gezinsleden toevoegen
+          </h2>
+          <Button
+            type="button"
+            className="w-fit"
+            onClick={openAddFamilyMemberDialog}
+          >
+            Lid toevoegen
+          </Button>
+          <div>
+            <div>
+              <h3 className="typography-body rounded-t-8 bg-gray-200 p-20">
+                Gezinsleden
+              </h3>
+            </div>
+            <div className="rounded-b-8 border border-gray-200 py-20">
+              {fields.length ? (
+                fields.map((field, index) => {
+                  const { personaliaFirstName, personaliaLastname } = field;
+                  return (
+                    <div
+                      key={`${personaliaFirstName}-${personaliaLastname}`}
+                      className="flex flex-col gap-10 px-20 not-first:pt-20 not-last:border-b not-last:border-b-gray-200 not-last:pb-20"
+                    >
+                      <span>
+                        {personaliaFirstName} {personaliaLastname}
+                      </span>
+                      <div className="flex gap-20">
+                        <button
+                          type="button"
+                          className="hover:cursor-pointer"
+                          onClick={() => {
+                            setShouldUpdateFamilyMemberIndex(index);
+                            addFamilyMemberForm.reset(field);
+                            openAddFamilyMemberDialog();
+                          }}
+                        >
+                          Aanpassen
+                        </button>
+                        <button
+                          type="button"
+                          className="text-red-600 hover:cursor-pointer"
+                          onClick={() => remove(index)}
+                        >
+                          Verwijderen
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="px-20">
+                  Er zijn nog geen gezinsleden toegevoegd
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+        <Controller
+          name={INPUTKEYS.termsAndConditions}
+          control={control}
+          render={({ field }) => (
+            <RadioGroup
+              items={[
+                {
+                  value: "comply",
+                  label: "Ik ga akkoord met de algemene voorwaarden",
+                },
+              ]}
+              inputKey={INPUTKEYS.termsAndConditions}
+              field={field}
+              errorMessage={errors[INPUTKEYS.termsAndConditions]?.message}
+            />
+          )}
+        />
+        <div className="flex flex-col gap-10">
+          {formHasErrors && (
+            <FormErrors errors={errors}>
+              Er zitten fouten in het formulier:
+            </FormErrors>
+          )}
+          <RequiredInputDescription />
+        </div>
+        <Button type="submit" variant="secondary" className="w-full lg:w-fit">
+          Submit
+        </Button>
+      </form>
+      <AddFamilyMemberDialog
+        appendFamilyMember={appendFamilyMember}
+        closeModal={closeAddFamilyMemberDialog}
+        hookForm={addFamilyMemberForm}
+        isOpen={isAddFamilyMemberDialogOpen}
+        setShouldUpdateIndex={setShouldUpdateFamilyMemberIndex}
+        shouldUpdateIndex={shouldUpdateFamilyMemberIndex}
+        updateFamilyMember={updateFamilyMember}
+      />
+    </>
+  );
+};

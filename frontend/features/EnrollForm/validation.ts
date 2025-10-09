@@ -23,7 +23,7 @@ const personalInformation = {
     message: "Voer een geldig postcode in.",
   }),
   addressStreet: validateRequiredString("Straatnaam moet ingevuld worden."),
-  adressPlaceName: validateRequiredString("Plaatsnaam moet ingevuld worden."),
+  addressPlaceName: validateRequiredString("Plaatsnaam moet ingevuld worden."),
   // NOTE: double check if this validation needs to be updated.
   personaliaDateOfBirth: validateRequiredString(
     "Geboortedatum moet ingevuld worden.",

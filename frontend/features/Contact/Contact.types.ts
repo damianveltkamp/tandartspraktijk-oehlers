@@ -1,16 +1,12 @@
 interface ContactDetail {
   title: string;
+  type: "email" | "location" | "phone" | "website";
   url: string;
 }
 
 export interface ContactProps {
   className?: string;
-  contactDetails: {
-    email?: ContactDetail;
-    location?: ContactDetail;
-    phoneNumber?: ContactDetail;
-    website?: ContactDetail;
-  };
+  contactDetails: ContactDetail[];
   description: string;
   id?: string;
   title: string;

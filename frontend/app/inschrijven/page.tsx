@@ -1,22 +1,19 @@
+import { heroAdapter } from "@/adapters/objects/hero";
 import { EnrollForm } from "@/features/EnrollForm/EnrollForm";
 import { Hero } from "@/features/Hero/Hero";
+import { sanityFetch } from "@/sanity/lib/live";
+import { getEnrollmentPageQuery } from "@/sanity/lib/queries";
 
 export default async function Home() {
+  const [{ data: page }] = await Promise.all([
+    sanityFetch({ query: getEnrollmentPageQuery }),
+  ]);
+
+  const hero = heroAdapter(page?.hero);
+
   return (
     <div className="main-grid">
-      <Hero
-        title="Word patiënt bij Oehlers - uw gebit, is onze passie."
-        description="Gebruik onderstaand formulier om u in te schrijven bij onze praktijk. Zodra wij de inschrijving ontvangen hebben, zullen wij deze verwerken. Wij nemen dan spoedig contact met u op om de eerste afspraak in te plannen."
-        uspItems={[{ content: "Hoge kwaliteit" }, { content: "Snel geholpen" }]}
-        linkButtons={[
-          {
-            isExternal: false,
-            href: "/#contact",
-            children: "Kom in contact met ons",
-            variant: "blackGhost",
-          },
-        ]}
-      />
+      {hero && <Hero {...hero} />}
       <EnrollForm className="content-section" />
     </div>
   );

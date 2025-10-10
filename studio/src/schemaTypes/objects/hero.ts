@@ -24,22 +24,17 @@ export const hero = defineType({
       of: [{type: 'string'}],
     }),
     defineField({
-      name: 'contactLink',
-      title: 'Link to contact section',
-      type: 'restrictedLink',
-      validation: (Rule) => Rule.required(),
-      initialValue: () => ({
-        href: '#contact',
-      }),
+      name: 'links',
+      title: 'Links',
+      type: 'array',
+      of: [{type: 'link'}],
+      validation: (Rule) => Rule.max(2).error('You can only add up to 2 links'),
     }),
     defineField({
-      name: 'enrollmentLink',
-      title: 'Link to enrollment form',
-      type: 'restrictedLink',
+      name: 'image',
+      title: 'Image',
+      type: 'customImage',
       validation: (Rule) => Rule.required(),
-      initialValue: () => ({
-        href: '/inschrijven',
-      }),
     }),
   ],
 })

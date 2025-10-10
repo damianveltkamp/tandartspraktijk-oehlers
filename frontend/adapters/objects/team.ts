@@ -5,7 +5,7 @@ import { urlForImage } from "@/sanity/lib/utils";
 export const teamAdapter = (data: null | Team | undefined) => {
   if (!data) return null;
 
-  const foo: TeamProps = {
+  const teamData: TeamProps = {
     title: data.heading,
     description: data.description,
     teamMembers:
@@ -14,7 +14,8 @@ export const teamAdapter = (data: null | Team | undefined) => {
 
         return {
           name: teamMember.name,
-          jobtitle: teamMember.jobTitle,
+          jobTitle: teamMember.jobTitle,
+          jobDescription: teamMember.jobDescription,
           image: {
             src: imageSrc,
             alt: teamMember.image.alt,
@@ -23,5 +24,5 @@ export const teamAdapter = (data: null | Team | undefined) => {
       }) ?? [],
   };
 
-  return foo;
+  return teamData;
 };

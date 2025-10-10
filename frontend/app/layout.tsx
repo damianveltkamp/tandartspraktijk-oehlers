@@ -7,15 +7,16 @@ import { draftMode } from "next/headers";
 import { toPlainText, VisualEditing } from "next-sanity";
 import { Toaster } from "sonner";
 
-import DraftModeToast from "@/app/components/DraftModeToast";
 import * as demo from "@/sanity/lib/demo";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
-import { settingsQuery } from "@/sanity/lib/queries";
+import { getNotificationQuery, settingsQuery } from "@/sanity/lib/queries";
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 import { handleError } from "./client-utils";
 import { Header } from "@/features/Header/Header";
 import { Footer } from "@/features/Footer/Footer";
 import { NotificationModal } from "@/features/NotificationModal/NotificationModal";
+import DraftModeToast from "@/components/DraftModeToast/DraftModeToast";
+import { notificationAdapter } from "@/adapters/objects/notification";
 
 /**
  * Generate metadata for the page.
@@ -67,6 +68,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [{ data: notification }] = await Promise.all([
+    sanityFetch({ query: getNotificationQuery }),
+  ]);
+
+  const showNotification = notification?.showNotification;
+  const notificationProps = notificationAdapter(notification);
+
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
@@ -84,10 +92,9 @@ export default async function RootLayout({
         <SanityLive onError={handleError} />
         <Header />
         <main>
-          <NotificationModal
-            title="Let op: Gewijzigde openingstijd vandaag"
-            description="Onze praktijk sluit vandaag een uur eerder dan gebruikelijk, namelijk om 16:00 uur.  Bedankt voor uw begrip!"
-          />
+          {showNotification && notificationProps && (
+            <NotificationModal {...notificationProps} />
+          )}
           {children}
         </main>
         <Footer />

@@ -34,7 +34,7 @@ const ContentContainer = ({
   return (
     <RadixDialog.Content
       className={twMerge(
-        "animate-radixDialogContentShow fixed top-1/2 left-1/2 z-50 w-[calc(100%-40px)] max-w-[650px] -translate-x-1/2 -translate-y-1/2",
+        "animate-radixDialogContentShow fixed top-1/2 left-1/2 z-50 w-[calc(100%-40px)] -translate-x-1/2 -translate-y-1/2",
         className,
       )}
       {...props}

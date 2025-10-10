@@ -16,12 +16,18 @@ export const link = defineType({
     defineField({
       name: 'href',
       title: 'URL',
-      type: 'url',
+      type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'openInNewTab',
       title: 'Open in new tab',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'isExternalLink',
+      title: 'Is this a link to a different website?',
       type: 'boolean',
       initialValue: false,
     }),

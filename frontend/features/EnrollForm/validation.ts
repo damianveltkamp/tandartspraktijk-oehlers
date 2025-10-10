@@ -3,7 +3,7 @@ import validator from "validator";
 import type { CountryCode } from "libphonenumber-js";
 import { isValidPhoneNumber } from "libphonenumber-js";
 
-export type FormValues = z.infer<typeof enrollValidationSchema>;
+export type EnrollFormValues = z.infer<typeof enrollValidationSchema>;
 export type PersonalInformationValues = z.infer<
   typeof familyMemberValidationSchema
 >;
@@ -13,28 +13,27 @@ export const validateRequiredString = (errMessage: string) => {
 };
 
 const personalInformation = {
+  personaliaGender: validateRequiredString("Selecteer uw geslacht"),
+  personaliaFirstName: validateRequiredString("Voornaam moet ingevuld worden."),
+  personaliaInfix: z.string(),
+  personaliaLastname: validateRequiredString("Achternaam moet ingevuld worden"),
+  // NOTE: double check if this validation needs to be updated.
+  personaliaDateOfBirth: validateRequiredString(
+    "Geboortedatum moet ingevuld worden.",
+  ),
+  personaliaEmail: z.email({ error: "Voer een geldig e-mailadres in." }),
+  personaliaPhoneCountry: z.string().optional(),
+  personaliaPhone: z.string().optional(),
+  addressStreet: validateRequiredString("Straatnaam moet ingevuld worden."),
   addressHouseNumber: validateRequiredString(
     "Huisnummer moet ingevuld worden.",
   ),
-  // TODO: Add postalcode validation
   addressPostalCode: validateRequiredString(
     "Postcode moet ingevuld worden.",
   ).refine((value) => validator.isPostalCode(value, "NL"), {
     message: "Voer een geldig postcode in.",
   }),
-  addressStreet: validateRequiredString("Straatnaam moet ingevuld worden."),
   addressPlaceName: validateRequiredString("Plaatsnaam moet ingevuld worden."),
-  // NOTE: double check if this validation needs to be updated.
-  personaliaDateOfBirth: validateRequiredString(
-    "Geboortedatum moet ingevuld worden.",
-  ),
-  personaliaGender: validateRequiredString("Selecteer uw geslacht"),
-  personaliaEmail: z.email({ error: "Voer een geldig e-mailadres in." }),
-  personaliaFirstName: validateRequiredString("Voornaam moet ingevuld worden."),
-  personaliaInfix: z.string(),
-  personaliaLastname: validateRequiredString("Achternaam moet ingevuld worden"),
-  personaliaPhone: z.string().optional(),
-  personaliaPhoneCountry: z.string().optional(),
   specialMessage: z.string(),
 };
 

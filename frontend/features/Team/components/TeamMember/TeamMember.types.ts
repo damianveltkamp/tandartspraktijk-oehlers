@@ -2,7 +2,8 @@ import type { ImageProps as NextImageProps } from "next/image";
 
 export interface TeamMemberType {
   image: NextImageProps;
-  jobtitle: string;
+  jobDescription?: string;
+  jobTitle: string;
   name: string;
 }
 

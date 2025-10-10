@@ -1,10 +1,9 @@
 import createImageUrlBuilder from "@sanity/image-url";
-import type { Link } from "@/sanity.types";
 import { dataset, projectId, studioUrl } from "@/sanity/lib/api";
 import type { CreateDataAttributeProps } from "next-sanity";
 import { createDataAttribute } from "next-sanity";
-import { getImageDimensions } from "@sanity/asset-utils";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import type { SettingsQueryResult } from "@/sanity.types";
 
 const imageBuilder = createImageUrlBuilder({
   projectId: projectId || "",
@@ -15,36 +14,15 @@ export const urlForImage = (source: SanityImageSource) => {
   return imageBuilder.image(source);
 };
 
-export function resolveOpenGraphImage(image: any, width = 1200, height = 627) {
+export function resolveOpenGraphImage(
+  image: NonNullable<SettingsQueryResult>["ogImage"] | null,
+  width = 1200,
+  height = 627,
+) {
   if (!image) return;
-  const url = urlForImage(image)?.width(1200).height(627).fit("crop").url();
+  const url = urlForImage(image).width(1200).height(627).fit("crop").url();
   if (!url) return;
-  return { url, alt: image?.alt as string, width, height };
-}
-
-// Depending on the type of link, we need to fetch the corresponding page, post, or URL.  Otherwise return null.
-export function linkResolver(link: Link | undefined) {
-  if (!link) return null;
-
-  // If linkType is not set but href is, lets set linkType to "href".  This comes into play when pasting links into the portable text editor because a link type is not assumed.
-  if (!link.linkType && link.href) {
-    link.linkType = "href";
-  }
-
-  switch (link.linkType) {
-    case "href":
-      return link.href || null;
-    case "page":
-      if (link?.page && typeof link.page === "string") {
-        return `/${link.page}`;
-      }
-    case "post":
-      if (link?.post && typeof link.post === "string") {
-        return `/posts/${link.post}`;
-      }
-    default:
-      return null;
-  }
+  return { url, alt: image.alt, width, height };
 }
 
 type DataAttributeConfig = CreateDataAttributeProps &

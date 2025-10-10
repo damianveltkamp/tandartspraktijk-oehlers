@@ -17,6 +17,7 @@ import { Select } from "@/components/Select/Select";
 import { Legend } from "@/components/Legend/Legend";
 import { TextArea } from "@/components/Textarea/Textarea";
 import type { SelectOption } from "@/components/Select/Select.types";
+import clsx from "clsx";
 
 interface PersonalInformationProps<TFormValues extends FieldValues> {
   control: Control<TFormValues>;
@@ -25,6 +26,7 @@ interface PersonalInformationProps<TFormValues extends FieldValues> {
   register: UseFormRegister<TFormValues>;
   setValue: UseFormSetValue<TFormValues>;
   trigger: UseFormTrigger<TFormValues>;
+  usedInModal?: boolean;
 }
 
 export const PersonalInformation = <TFormValues extends FieldValues>({
@@ -34,7 +36,15 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
   register,
   setValue,
   trigger,
+  usedInModal,
 }: PersonalInformationProps<TFormValues>) => {
+  const phoneNumberRowContainer = clsx(
+    "flex flex-col gap-20 lg:flex-row",
+    usedInModal && "lg:col-span-2",
+  );
+
+  console.log(countryOptions);
+
   return (
     <>
       <section
@@ -47,7 +57,6 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
         >
           Persoonsgegevens
         </h2>
-        {/* TODO: add the input label texts inside a dictionary within our cms. Or we just create a local json file. */}
         <fieldset className="flex flex-col gap-20 lg:col-span-2">
           <legend className="typography-body mb-20">Geslacht</legend>
           <div className="col-span-2">
@@ -75,7 +84,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
         <div>
           <Input
             required
-            label="Firstname"
+            label="Voornaam"
             inputKey={INPUTKEYS.personaliaFirstName}
             register={register(
               INPUTKEYS.personaliaFirstName as Path<TFormValues>,
@@ -101,7 +110,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
         <div className="lg:col-span-2">
           <Input
             required
-            label="Lastname"
+            label="Achternaam"
             inputKey={INPUTKEYS.personaliaLastname}
             register={register(
               INPUTKEYS.personaliaLastname as Path<TFormValues>,
@@ -145,7 +154,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
             autoComplete={FORM_AUTOCOMPLETE.personaliaEmail}
           />
         </div>
-        <div className="flex flex-col gap-20 lg:flex-row">
+        <div className={phoneNumberRowContainer}>
           <Select
             className="lg:w-1/2"
             label="Land (mobiele telefoon)"
@@ -235,12 +244,14 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
             <Input
               required
               label="Plaatsnaam"
-              inputKey={INPUTKEYS.adressPlaceName}
+              inputKey={INPUTKEYS.addressPlaceName}
               register={register(
-                INPUTKEYS.adressPlaceName as Path<TFormValues>,
+                INPUTKEYS.addressPlaceName as Path<TFormValues>,
               )}
               errorMessage={
-                errors[INPUTKEYS.adressPlaceName]?.message as string | undefined
+                errors[INPUTKEYS.addressPlaceName]?.message as
+                  | string
+                  | undefined
               }
               autoComplete={FORM_AUTOCOMPLETE.addressPlaceName}
             />

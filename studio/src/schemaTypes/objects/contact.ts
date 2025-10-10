@@ -17,5 +17,11 @@ export const contact = defineType({
       type: 'text',
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: 'contactDetails',
+      title: 'Contactdetail',
+      type: 'array',
+      of: [{type: 'contactDetail'}],
+    }),
   ],
 })

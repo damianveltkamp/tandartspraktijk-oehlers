@@ -3,7 +3,8 @@ import type { TeamMemberProps } from "./TeamMember.types";
 import clsx from "clsx";
 
 export const TeamMember = ({
-  jobtitle,
+  jobTitle,
+  jobDescription,
   name,
   shouldBePlacedInTheMiddle,
   image,
@@ -16,7 +17,6 @@ export const TeamMember = ({
     },
   );
 
-  console.log(image.src);
   return (
     <div className={styles}>
       <Image
@@ -26,8 +26,11 @@ export const TeamMember = ({
         borderRadius={8}
         className="elevation-shadow"
       />
-      <h3 className="typography-body lg:typography-headline-3">{name}</h3>
-      <p className="typography-body-small lg:typography-body">{jobtitle}</p>
+      <h3 className="typography-headline-3">{name}</h3>
+      <p className="typography-body flex flex-col">
+        <span>{jobTitle}</span>
+        {jobDescription && <span>{jobDescription}</span>}
+      </p>
     </div>
   );
 };

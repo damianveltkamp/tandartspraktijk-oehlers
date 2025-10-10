@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { SubmitHandler } from "react-hook-form";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import type { FormValues, PersonalInformationValues } from "./validation";
+import type { EnrollFormValues, PersonalInformationValues } from "./validation";
 import {
   enrollValidationSchema,
   familyMemberValidationSchema,
@@ -10,7 +10,11 @@ import {
 import { twMerge } from "tailwind-merge";
 import { FormErrors } from "@/components/FormErrors/FormErrors";
 import { RadioGroup } from "@/components/RadioGroup/RadioGroup";
-import { ADDFAMILYMEMBERFORMDEFAULTVALUES, INPUTKEYS } from "./constants";
+import {
+  ADDFAMILYMEMBERFORMDEFAULTVALUES,
+  ENROLLFORMDEFAULTVALUES,
+  INPUTKEYS,
+} from "./constants";
 import { Button } from "@/components/Button/Button";
 import { AddFamilyMemberDialog } from "./components/AddFamilyMemberDialog/AddFamilyMemberDialog";
 import { PersonalInformation } from "./components/PersonalInformation/PersonalInformation";
@@ -42,25 +46,9 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
     trigger,
     setValue,
     control,
-  } = useForm<FormValues>({
+  } = useForm<EnrollFormValues>({
     mode: "onSubmit",
-    defaultValues: {
-      termsAndConditions: "",
-      addressHouseNumber: "",
-      addressPostalCode: "",
-      addressStreet: "",
-      addressPlaceName: "",
-      personaliaGender: "",
-      personaliaDateOfBirth: "",
-      personaliaEmail: "",
-      personaliaFirstName: "",
-      personaliaInfix: "",
-      personaliaLastname: "",
-      personaliaPhone: "",
-      personaliaPhoneCountry: "",
-      specialMessage: "",
-      familyMembers: [],
-    },
+    defaultValues: ENROLLFORMDEFAULTVALUES,
     resolver: zodResolver(enrollValidationSchema),
   });
 
@@ -81,7 +69,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
   });
 
   // TODO: handle submitting data. Send grid or some other integration.
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const onSubmit: SubmitHandler<EnrollFormValues> = (data) => {
     console.log(data);
   };
 

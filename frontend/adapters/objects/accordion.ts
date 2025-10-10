@@ -4,7 +4,7 @@ import type { Accordion } from "@/sanity.types";
 export const accordionBlockAdapter = (data: Accordion | null | undefined) => {
   if (!data) return null;
 
-  const foo: AccordionBlockProps = {
+  const accordionBlockData: AccordionBlockProps = {
     title: data.heading,
     items:
       data.accordionItems?.map((item) => {
@@ -15,5 +15,5 @@ export const accordionBlockAdapter = (data: Accordion | null | undefined) => {
       }) ?? [],
   };
 
-  return foo;
+  return accordionBlockData;
 };

@@ -4,7 +4,7 @@ import type { Services } from "@/sanity.types";
 export const servicesAdapter = (data: null | Services | undefined) => {
   if (!data) return null;
 
-  const foo: ServicesProps = {
+  const servicesData: ServicesProps = {
     title: data.heading,
     description: data.description,
     link: {
@@ -15,5 +15,5 @@ export const servicesAdapter = (data: null | Services | undefined) => {
     },
   };
 
-  return foo;
+  return servicesData;
 };

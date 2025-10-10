@@ -10,63 +10,72 @@ export const Contact = ({
   contactDetails,
   className,
 }: ContactProps) => {
-  const { phoneNumber, email, location, website } = contactDetails;
-
   return (
     <div id={id} className={twMerge("flex flex-col gap-15", className)}>
       <h2 className="typography-headline-2">{title}</h2>
       <p className="typography-body">{description}</p>
       <ul className="flex flex-col gap-15">
-        {phoneNumber?.title && phoneNumber.url && (
-          <li>
-            <Link
-              isExternal
-              href={`tel:${phoneNumber.url}`}
-              className="flex gap-15"
-            >
-              <Phone />
-              <span className="flex-1">{phoneNumber.title}</span>
-            </Link>
-          </li>
-        )}
-        {email?.title && email.url && (
-          <li>
-            <Link
-              isExternal
-              href={`mailto:${email.url}`}
-              className="flex gap-15"
-            >
-              <LucideMail />
-              <span className="flex-1">{email.title}</span>
-            </Link>
-          </li>
-        )}
-        {location?.title && location.url && (
-          <li>
-            <Link
-              isExternal
-              target="_blank"
-              href={location.url}
-              className="flex gap-15"
-            >
-              <MapPin />
-              <span className="flex-1">{location.title}</span>
-            </Link>
-          </li>
-        )}
-        {website?.title && website.url && (
-          <li>
-            <Link
-              isExternal
-              target="_blank"
-              href={website.url}
-              className="flex gap-15"
-            >
-              <Globe />
-              <span className="flex-1">{website.title}</span>
-            </Link>
-          </li>
-        )}
+        {contactDetails.map((contactDetail) => {
+          if (contactDetail.type === "phone") {
+            return (
+              <li key={contactDetail.title}>
+                <Link
+                  isExternal
+                  href={`tel:${contactDetail.url}`}
+                  className="flex gap-15"
+                >
+                  <Phone />
+                  <span className="flex-1">{contactDetail.title}</span>
+                </Link>
+              </li>
+            );
+          }
+
+          if (contactDetail.type === "email") {
+            return (
+              <li key={contactDetail.title}>
+                <Link
+                  isExternal
+                  href={`mailto:${contactDetail.url}`}
+                  className="flex gap-15"
+                >
+                  <LucideMail />
+                  <span className="flex-1">{contactDetail.title}</span>
+                </Link>
+              </li>
+            );
+          }
+
+          if (contactDetail.type === "location") {
+            return (
+              <li key={contactDetail.title}>
+                <Link
+                  isExternal
+                  target="_blank"
+                  href={contactDetail.url}
+                  className="flex gap-15"
+                >
+                  <MapPin />
+                  <span className="flex-1">{contactDetail.title}</span>
+                </Link>
+              </li>
+            );
+          }
+
+          return (
+            <li key={contactDetail.title}>
+              <Link
+                isExternal
+                target="_blank"
+                href={contactDetail.url}
+                className="flex gap-15"
+              >
+                <Globe />
+                <span className="flex-1">{contactDetail.title}</span>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

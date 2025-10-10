@@ -1,11 +1,7 @@
 "use client";
 import * as Dialog from "@/components/Dialog/Dialog";
 import { useEffect, useState } from "react";
-
-interface NotificationModalProps {
-  description: string;
-  title: string;
-}
+import type { NotificationModalProps } from "./NotificationModal.types";
 
 /**
  * @component NotificationModal
@@ -35,7 +31,7 @@ export const NotificationModal = ({
     <Dialog.Root open={isOpen}>
       <Dialog.Portal>
         <Dialog.Overlay />
-        <Dialog.ContentContainer>
+        <Dialog.ContentContainer className="max-w-[650px]">
           <Dialog.Header closeModal={closeModal} title={title} />
           <Dialog.Content description={description}></Dialog.Content>
         </Dialog.ContentContainer>

@@ -8,6 +8,7 @@ export const Hero = ({
   description,
   uspItems,
   linkButtons,
+  image,
 }: HeroProps) => {
   return (
     <>
@@ -20,7 +21,7 @@ export const Hero = ({
               </h1>
               <p className="typography-body text-black">{description}</p>
             </div>
-            {uspItems.length && (
+            {!!uspItems.length && (
               <ul className="flex flex-col gap-15">
                 {uspItems.map((content) => (
                   <li
@@ -34,24 +35,28 @@ export const Hero = ({
               </ul>
             )}
           </div>
-          {linkButtons && (
+          {linkButtons?.length && (
             <div className="content-section m-auto flex w-max flex-col gap-10 md:m-0">
-              {/* TODO: refactor key here to the ID we will be getting from CMS. */}
               {linkButtons.map((props, index) => (
-                <LinkButton key={index} {...props} className="w-full" />
+                <LinkButton
+                  key={props.href}
+                  {...props}
+                  className="w-full"
+                  variant={index === 0 ? "blackGhost" : "secondary"}
+                />
               ))}
             </div>
           )}
         </div>
         <Image
-          src="/hero.png"
-          alt="Afbeelding van de paktijk"
+          src={image.src}
+          alt={image.alt}
           className="full-width-section hidden md:row-start-1 md:ml-auto md:block md:w-[55%]"
         />
       </div>
       <Image
-        src="/hero.png"
-        alt="Afbeelding van de paktijk"
+        src={image.src}
+        alt={image.alt}
         aspectRatio="landscape"
         className="content-section elevation-shadow mt-[-140px] md:hidden"
         borderRadius={24}

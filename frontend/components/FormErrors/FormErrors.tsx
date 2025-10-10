@@ -30,7 +30,6 @@ export const FormErrors = ({
             ),
         )}
       </span>
-      {/* <a href="#">Please fill in your email.</a> */}
     </p>
   );
 };

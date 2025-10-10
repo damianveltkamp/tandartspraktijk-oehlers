@@ -17,7 +17,14 @@ export type TeamMember = {
   _type: "teamMember";
   name: string;
   jobTitle: string;
+  jobDescription?: string;
   image: CustomImage;
+};
+
+export type RestrictedLink = {
+  _type: "restrictedLink";
+  linkText: string;
+  href: string;
 };
 
 export type Logo = {
@@ -31,18 +38,20 @@ export type Link = {
   linkText: string;
   href: string;
   openInNewTab?: boolean;
-};
-
-export type RestrictedLink = {
-  _type: "restrictedLink";
-  linkText: string;
-  href: string;
+  isExternalLink?: boolean;
 };
 
 export type EnrollForm = {
   _type: "enrollForm";
   heading: string;
   description: string;
+};
+
+export type ContactDetail = {
+  _type: "contactDetail";
+  linkText: string;
+  href: string;
+  type: "email" | "phone" | "website" | "location";
 };
 
 export type AccordionItem = {
@@ -82,6 +91,11 @@ export type Contact = {
   _type: "contact";
   heading: string;
   description: string;
+  contactDetails?: Array<
+    {
+      _key: string;
+    } & ContactDetail
+  >;
 };
 
 export type CustomImage = {
@@ -139,8 +153,23 @@ export type Hero = {
   heading: string;
   description: string;
   usps?: Array<string>;
-  contactLink: RestrictedLink;
-  enrollmentLink: RestrictedLink;
+  links?: Array<
+    {
+      _key: string;
+    } & Link
+  >;
+  image: CustomImage;
+};
+
+export type Notification = {
+  _id: string;
+  _type: "notification";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  heading: string;
+  description: string;
+  showNotification?: boolean;
 };
 
 export type Settings = {
@@ -421,10 +450,11 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes =
   | TeamMember
+  | RestrictedLink
   | Logo
   | Link
-  | RestrictedLink
   | EnrollForm
+  | ContactDetail
   | AccordionItem
   | EnrollPage
   | HomePage
@@ -434,6 +464,7 @@ export type AllSanitySchemaTypes =
   | Services
   | Team
   | Hero
+  | Notification
   | Settings
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus
@@ -485,7 +516,7 @@ export type SettingsQueryResult = {
   };
 } | null;
 // Variable: getHomepageQuery
-// Query: *[_type == 'homePage'][0]{    _id,    _type,    name,    hero,    faq,    services,    contact,    emergencyService,    team,    treatments,  }
+// Query: *[_type == 'homePage'][0]{    _id,    _type,    name,    hero,    faq,    services,    contact,    image,    emergencyService,    team,    treatments,  }
 export type GetHomepageQueryResult = {
   _id: string;
   _type: "homePage";
@@ -494,9 +525,27 @@ export type GetHomepageQueryResult = {
   faq: Accordion;
   services: Services;
   contact: Contact;
+  image: CustomImage;
   emergencyService: Contact;
   team: Team;
   treatments: Accordion;
+} | null;
+// Variable: getEnrollmentPageQuery
+// Query: *[_type == 'enrollPage'][0]{    _id,    _type,    name,    hero,  }
+export type GetEnrollmentPageQueryResult = {
+  _id: string;
+  _type: "enrollPage";
+  name: string;
+  hero: Hero;
+} | null;
+// Variable: getNotificationQuery
+// Query: *[_type == 'notification'][0]{    _id,    _type,    heading,    description,    showNotification,  }
+export type GetNotificationQueryResult = {
+  _id: string;
+  _type: "notification";
+  heading: string;
+  description: string;
+  showNotification: boolean | null;
 } | null;
 // Variable: sitemapData
 // Query: *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {    "slug": slug.current,    _type,    _updatedAt,  }
@@ -507,7 +556,9 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type == "settings"][0]': SettingsQueryResult;
-    "\n  *[_type == 'homePage'][0]{\n    _id,\n    _type,\n    name,\n    hero,\n    faq,\n    services,\n    contact,\n    emergencyService,\n    team,\n    treatments,\n  }\n": GetHomepageQueryResult;
+    "\n  *[_type == 'homePage'][0]{\n    _id,\n    _type,\n    name,\n    hero,\n    faq,\n    services,\n    contact,\n    image,\n    emergencyService,\n    team,\n    treatments,\n  }\n": GetHomepageQueryResult;
+    "\n  *[_type == 'enrollPage'][0]{\n    _id,\n    _type,\n    name,\n    hero,\n  }\n": GetEnrollmentPageQueryResult;
+    "\n  *[_type == 'notification'][0]{\n    _id,\n    _type,\n    heading,\n    description,\n    showNotification,\n  }\n": GetNotificationQueryResult;
     '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult;
   }
 }

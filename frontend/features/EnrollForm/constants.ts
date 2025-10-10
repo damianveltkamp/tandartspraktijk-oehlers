@@ -1,11 +1,11 @@
 import type { SelfMappedRecord } from "@/utils/types/selfMappedRecord";
-import type { FormValues } from "./validation";
+import type { EnrollFormValues, PersonalInformationValues } from "./validation";
 
-export const INPUTKEYS: SelfMappedRecord<keyof FormValues> = {
+export const INPUTKEYS: SelfMappedRecord<keyof EnrollFormValues> = {
   addressHouseNumber: "addressHouseNumber",
   addressPostalCode: "addressPostalCode",
   addressStreet: "addressStreet",
-  adressPlaceName: "adressPlaceName",
+  addressPlaceName: "addressPlaceName",
   personaliaDateOfBirth: "personaliaDateOfBirth",
   personaliaEmail: "personaliaEmail",
   personaliaFirstName: "personaliaFirstName",
@@ -19,11 +19,29 @@ export const INPUTKEYS: SelfMappedRecord<keyof FormValues> = {
   familyMembers: "familyMembers",
 } as const;
 
-export const ADDFAMILYMEMBERFORMDEFAULTVALUES = {
+export const ENROLLFORMDEFAULTVALUES: EnrollFormValues = {
+  termsAndConditions: "",
   addressHouseNumber: "",
   addressPostalCode: "",
   addressStreet: "",
-  adressPlaceName: "",
+  addressPlaceName: "",
+  personaliaGender: "",
+  personaliaDateOfBirth: "",
+  personaliaEmail: "",
+  personaliaFirstName: "",
+  personaliaInfix: "",
+  personaliaLastname: "",
+  personaliaPhone: "",
+  personaliaPhoneCountry: "NL",
+  specialMessage: "",
+  familyMembers: [],
+};
+
+export const ADDFAMILYMEMBERFORMDEFAULTVALUES: PersonalInformationValues = {
+  addressHouseNumber: "",
+  addressPostalCode: "",
+  addressStreet: "",
+  addressPlaceName: "",
   personaliaDateOfBirth: "",
   personaliaEmail: "",
   personaliaFirstName: "",

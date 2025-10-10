@@ -21,7 +21,7 @@ export const Team = ({
         <p className="typography-body">{description}</p>
       </div>
       <div className="grid grid-cols-2 gap-20 md:grid-cols-3">
-        {teamMembers.map(({ name, jobtitle, image }, index) => {
+        {teamMembers.map(({ name, jobTitle, jobDescription, image }, index) => {
           const isLastItem = teamMembers.length === index + 1;
           const evenAmountOfTeamMembers = isEven(teamMembers);
 
@@ -29,7 +29,8 @@ export const Team = ({
             <TeamMember
               key={name}
               name={name}
-              jobtitle={jobtitle}
+              jobTitle={jobTitle}
+              jobDescription={jobDescription}
               image={image}
               shouldBePlacedInTheMiddle={Boolean(
                 isLastItem && !evenAmountOfTeamMembers,

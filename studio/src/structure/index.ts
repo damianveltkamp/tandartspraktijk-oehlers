@@ -7,8 +7,13 @@ import pluralize from 'pluralize-esm'
  * listed in the studio or for adding additional in-studio previews or content to documents.
  * Learn more: https://www.sanity.io/docs/structure-builder-introduction
  */
-
-const DISABLED_TYPES = ['settings', 'assist.instruction.context', 'homePage', 'enrollPage']
+const DISABLED_TYPES = [
+  'settings',
+  'assist.instruction.context',
+  'homePage',
+  'enrollPage',
+  'notification',
+]
 
 export const structure: StructureResolver = (S: StructureBuilder) =>
   S.list()
@@ -30,6 +35,10 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
         .title('Inschrijfpagina')
         .child(S.document().schemaType('enrollPage').documentId('enrollPage'))
         .icon(DocumentIcon),
+      S.listItem()
+        .title('Notification')
+        .child(S.document().schemaType('notification').documentId('notification'))
+        .icon(CogIcon),
       S.listItem()
         .title('Site Settings')
         .child(S.document().schemaType('settings').documentId('siteSettings'))

@@ -1,7 +1,10 @@
 "use client";
 import { Button } from "@/components/Button/Button";
 import * as Dialog from "@/components/Dialog/Dialog";
-import type { FormValues, PersonalInformationValues } from "../../validation";
+import type {
+  EnrollFormValues,
+  PersonalInformationValues,
+} from "../../validation";
 import type {
   SubmitHandler,
   UseFieldArrayAppend,
@@ -15,13 +18,13 @@ import { ADDFAMILYMEMBERFORMDEFAULTVALUES } from "../../constants";
 import { RequiredInputDescription } from "../RequiredInputDescription/RequiredInputDescription";
 
 interface AddFamilyMemberDialogProps {
-  appendFamilyMember: UseFieldArrayAppend<FormValues, "familyMembers">;
+  appendFamilyMember: UseFieldArrayAppend<EnrollFormValues, "familyMembers">;
   closeModal: VoidFunction;
   hookForm: UseFormReturn<PersonalInformationValues>;
   isOpen: boolean;
   setShouldUpdateIndex: Dispatch<SetStateAction<null | number>>;
   shouldUpdateIndex: null | number;
-  updateFamilyMember: UseFieldArrayUpdate<FormValues, "familyMembers">;
+  updateFamilyMember: UseFieldArrayUpdate<EnrollFormValues, "familyMembers">;
 }
 
 export const AddFamilyMemberDialog = ({
@@ -66,7 +69,7 @@ export const AddFamilyMemberDialog = ({
       <Dialog.Root open={isOpen}>
         <Dialog.Portal>
           <Dialog.Overlay />
-          <Dialog.ContentContainer>
+          <Dialog.ContentContainer className="max-w-[1220px]">
             <Dialog.Header closeModal={resetDialog} title="Add family member" />
             <Dialog.Content className="h-[70dvh] overflow-auto">
               <form
@@ -75,6 +78,7 @@ export const AddFamilyMemberDialog = ({
                 className="flex flex-col gap-40"
               >
                 <PersonalInformation
+                  usedInModal
                   control={control}
                   countryOptions={getCountryOptions()}
                   errors={errors}

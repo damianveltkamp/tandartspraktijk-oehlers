@@ -17,7 +17,14 @@ export type TeamMember = {
   _type: 'teamMember'
   name: string
   jobTitle: string
+  jobDescription?: string
   image: CustomImage
+}
+
+export type RestrictedLink = {
+  _type: 'restrictedLink'
+  linkText: string
+  href: string
 }
 
 export type Logo = {
@@ -31,18 +38,20 @@ export type Link = {
   linkText: string
   href: string
   openInNewTab?: boolean
-}
-
-export type RestrictedLink = {
-  _type: 'restrictedLink'
-  linkText: string
-  href: string
+  isExternalLink?: boolean
 }
 
 export type EnrollForm = {
   _type: 'enrollForm'
   heading: string
   description: string
+}
+
+export type ContactDetail = {
+  _type: 'contactDetail'
+  linkText: string
+  href: string
+  type: 'email' | 'phone' | 'website' | 'location'
 }
 
 export type AccordionItem = {
@@ -82,6 +91,11 @@ export type Contact = {
   _type: 'contact'
   heading: string
   description: string
+  contactDetails?: Array<
+    {
+      _key: string
+    } & ContactDetail
+  >
 }
 
 export type CustomImage = {
@@ -139,8 +153,23 @@ export type Hero = {
   heading: string
   description: string
   usps?: Array<string>
-  contactLink: RestrictedLink
-  enrollmentLink: RestrictedLink
+  links?: Array<
+    {
+      _key: string
+    } & Link
+  >
+  image: CustomImage
+}
+
+export type Notification = {
+  _id: string
+  _type: 'notification'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  heading: string
+  description: string
+  showNotification?: boolean
 }
 
 export type Settings = {
@@ -421,10 +450,11 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes =
   | TeamMember
+  | RestrictedLink
   | Logo
   | Link
-  | RestrictedLink
   | EnrollForm
+  | ContactDetail
   | AccordionItem
   | EnrollPage
   | HomePage
@@ -434,6 +464,7 @@ export type AllSanitySchemaTypes =
   | Services
   | Team
   | Hero
+  | Notification
   | Settings
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus

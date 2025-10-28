@@ -32,7 +32,7 @@ export const ENROLLFORMDEFAULTVALUES: EnrollFormValues = {
   personaliaInfix: "",
   personaliaLastname: "",
   personaliaPhone: "",
-  personaliaPhoneCountry: "NL",
+  personaliaPhoneCountry: "NL (+31)",
   specialMessage: "",
   familyMembers: [],
 };

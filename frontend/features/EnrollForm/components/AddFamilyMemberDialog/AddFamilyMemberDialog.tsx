@@ -9,6 +9,7 @@ import type {
   SubmitHandler,
   UseFieldArrayAppend,
   UseFieldArrayUpdate,
+  UseFormGetValues,
   UseFormReturn,
 } from "react-hook-form";
 import { PersonalInformation } from "../PersonalInformation/PersonalInformation";
@@ -20,6 +21,7 @@ import { RequiredInputDescription } from "../RequiredInputDescription/RequiredIn
 interface AddFamilyMemberDialogProps {
   appendFamilyMember: UseFieldArrayAppend<EnrollFormValues, "familyMembers">;
   closeModal: VoidFunction;
+  getMainRegistrarData?: UseFormGetValues<EnrollFormValues>;
   hookForm: UseFormReturn<PersonalInformationValues>;
   isOpen: boolean;
   setShouldUpdateIndex: Dispatch<SetStateAction<null | number>>;
@@ -28,6 +30,7 @@ interface AddFamilyMemberDialogProps {
 }
 
 export const AddFamilyMemberDialog = ({
+  getMainRegistrarData,
   appendFamilyMember,
   closeModal,
   hookForm,
@@ -78,7 +81,8 @@ export const AddFamilyMemberDialog = ({
                 className="flex flex-col gap-40"
               >
                 <PersonalInformation
-                  usedInModal
+                  usedForAddingFamilyMember
+                  getMainRegistrarData={getMainRegistrarData}
                   control={control}
                   countryOptions={getCountryOptions()}
                   errors={errors}

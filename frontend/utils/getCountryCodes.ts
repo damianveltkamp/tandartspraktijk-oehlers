@@ -9,9 +9,11 @@ export const getCountryOptions = () => {
   ];
 
   return countryCodes.map((country) => {
+    const countryAndCode = `${country} (+${getCountryCallingCode(country)})`;
+
     const options: SelectOption = {
-      value: country,
-      label: `${country} (+${getCountryCallingCode(country)})`,
+      value: countryAndCode,
+      label: countryAndCode,
     };
 
     return options;

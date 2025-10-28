@@ -4,6 +4,7 @@ import type {
   FieldValues,
   Path,
   PathValue,
+  UseFormGetValues,
   UseFormRegister,
   UseFormSetValue,
   UseFormTrigger,
@@ -18,32 +19,34 @@ import { Legend } from "@/components/Legend/Legend";
 import { TextArea } from "@/components/Textarea/Textarea";
 import type { SelectOption } from "@/components/Select/Select.types";
 import clsx from "clsx";
+import { Button } from "@/components/Button/Button";
+import type { EnrollFormValues } from "../../validation";
 
 interface PersonalInformationProps<TFormValues extends FieldValues> {
   control: Control<TFormValues>;
   countryOptions: SelectOption[];
   errors: FieldErrors<TFormValues>;
+  getMainRegistrarData?: UseFormGetValues<EnrollFormValues>;
   register: UseFormRegister<TFormValues>;
   setValue: UseFormSetValue<TFormValues>;
   trigger: UseFormTrigger<TFormValues>;
-  usedInModal?: boolean;
+  usedForAddingFamilyMember?: boolean;
 }
 
 export const PersonalInformation = <TFormValues extends FieldValues>({
+  getMainRegistrarData,
   control,
   countryOptions,
   errors,
   register,
   setValue,
   trigger,
-  usedInModal,
+  usedForAddingFamilyMember,
 }: PersonalInformationProps<TFormValues>) => {
   const phoneNumberRowContainer = clsx(
     "flex flex-col gap-20 lg:flex-row",
-    usedInModal && "lg:col-span-2",
+    usedForAddingFamilyMember && "lg:col-span-2",
   );
-
-  console.log(countryOptions);
 
   return (
     <>
@@ -143,7 +146,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
         </div>
         <div>
           <Input
-            required
+            required={usedForAddingFamilyMember ? false : true}
             type="email"
             label="E-mailadres"
             inputKey={INPUTKEYS.personaliaEmail}
@@ -179,6 +182,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
             }}
           />
           <Input
+            required={usedForAddingFamilyMember ? false : true}
             className="lg:w-1/2"
             type="tel"
             label="Mobiele telefoon"
@@ -194,6 +198,60 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
       </section>
       <fieldset className="flex flex-col gap-20">
         <Legend className="mb-20">Adresgegevens</Legend>
+        {usedForAddingFamilyMember && (
+          <Button
+            type="button"
+            className="w-fit"
+            onClick={() => {
+              if (getMainRegistrarData) {
+                const mainRegistrarData = getMainRegistrarData();
+
+                setValue(
+                  INPUTKEYS.addressPlaceName as Path<TFormValues>,
+                  mainRegistrarData.addressPlaceName as PathValue<
+                    TFormValues,
+                    Path<TFormValues>
+                  >,
+                  {
+                    shouldValidate: true,
+                  },
+                );
+                setValue(
+                  INPUTKEYS.addressStreet as Path<TFormValues>,
+                  mainRegistrarData.addressStreet as PathValue<
+                    TFormValues,
+                    Path<TFormValues>
+                  >,
+                  {
+                    shouldValidate: true,
+                  },
+                );
+                setValue(
+                  INPUTKEYS.addressPostalCode as Path<TFormValues>,
+                  mainRegistrarData.addressPostalCode as PathValue<
+                    TFormValues,
+                    Path<TFormValues>
+                  >,
+                  {
+                    shouldValidate: true,
+                  },
+                );
+                setValue(
+                  INPUTKEYS.addressHouseNumber as Path<TFormValues>,
+                  mainRegistrarData.addressHouseNumber as PathValue<
+                    TFormValues,
+                    Path<TFormValues>
+                  >,
+                  {
+                    shouldValidate: true,
+                  },
+                );
+              }
+            }}
+          >
+            Zelfde adres als hoofd aanmelder
+          </Button>
+        )}
         <div className="grid grid-cols-1 gap-20 lg:grid-cols-2">
           <div>
             <Input

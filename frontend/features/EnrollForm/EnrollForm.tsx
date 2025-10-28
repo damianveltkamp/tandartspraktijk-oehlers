@@ -15,12 +15,13 @@ import {
   ENROLLFORMDEFAULTVALUES,
   INPUTKEYS,
 } from "./constants";
-import { Button } from "@/components/Button/Button";
+import { Button, LinkButton } from "@/components/Button/Button";
 import { AddFamilyMemberDialog } from "./components/AddFamilyMemberDialog/AddFamilyMemberDialog";
 import { PersonalInformation } from "./components/PersonalInformation/PersonalInformation";
 import { getCountryOptions } from "@/utils/getCountryCodes";
 import { useState } from "react";
 import { RequiredInputDescription } from "./components/RequiredInputDescription/RequiredInputDescription";
+import { sendEnrollmentEmail } from "@/actions/sendEnrollmentEmail";
 
 interface EnrollFormProps {
   className?: string;
@@ -34,6 +35,7 @@ interface EnrollFormProps {
  * to send a request to enroll within our dental practice.
  */
 export const EnrollForm = ({ className }: EnrollFormProps) => {
+  const [successfullySubmitted, setSuccessfullySubmitted] = useState(false);
   const [isAddFamilyMemberDialogOpen, setIsAddFamilyMemberDialogOpen] =
     useState(false);
   const [shouldUpdateFamilyMemberIndex, setShouldUpdateFamilyMemberIndex] =
@@ -46,6 +48,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
     trigger,
     setValue,
     control,
+    getValues,
   } = useForm<EnrollFormValues>({
     mode: "onSubmit",
     defaultValues: ENROLLFORMDEFAULTVALUES,
@@ -69,8 +72,21 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
   });
 
   // TODO: handle submitting data. Send grid or some other integration.
-  const onSubmit: SubmitHandler<EnrollFormValues> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<EnrollFormValues> = async (data) => {
+    try {
+      const result = await sendEnrollmentEmail(data);
+
+      if (result.success) {
+        setSuccessfullySubmitted(true);
+      } else {
+        // TODO: show error state in the UI to let the user know something went wrong during submission.
+        alert(result.message);
+      }
+    } catch (error) {
+      // TODO: show error state in the UI to let the user know something went wrong during submission.
+      console.error(error);
+      alert(error);
+    }
   };
 
   const formHasErrors = Object.keys(errors).length > 0;
@@ -82,6 +98,25 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
   const closeAddFamilyMemberDialog = () => {
     setIsAddFamilyMemberDialogOpen(false);
   };
+
+  if (successfullySubmitted) {
+    return (
+      <div className="content-section flex flex-col gap-20">
+        <h2 className="typography-headline-2">Bedankt voor het inschrijven</h2>
+        <p className="typography-body">
+          Wij nemen zo spoedig mogelijk contact met u op.
+        </p>
+        <LinkButton
+          isExternal={false}
+          variant="primary"
+          className="w-fit"
+          href="/"
+        >
+          Ga terug naar de homepagina
+        </LinkButton>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -194,6 +229,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
         </Button>
       </form>
       <AddFamilyMemberDialog
+        getMainRegistrarData={getValues}
         appendFamilyMember={appendFamilyMember}
         closeModal={closeAddFamilyMemberDialog}
         hookForm={addFamilyMemberForm}

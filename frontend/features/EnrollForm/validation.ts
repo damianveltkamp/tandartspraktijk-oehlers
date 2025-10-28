@@ -12,29 +12,42 @@ export const validateRequiredString = (errMessage: string) => {
   return z.string({ error: errMessage }).min(1, { error: errMessage });
 };
 
-const personalInformation = {
-  personaliaGender: validateRequiredString("Selecteer uw geslacht"),
-  personaliaFirstName: validateRequiredString("Voornaam moet ingevuld worden."),
-  personaliaInfix: z.string(),
-  personaliaLastname: validateRequiredString("Achternaam moet ingevuld worden"),
-  // NOTE: double check if this validation needs to be updated.
-  personaliaDateOfBirth: validateRequiredString(
-    "Geboortedatum moet ingevuld worden.",
-  ),
-  personaliaEmail: z.email({ error: "Voer een geldig e-mailadres in." }),
-  personaliaPhoneCountry: z.string().optional(),
-  personaliaPhone: z.string().optional(),
-  addressStreet: validateRequiredString("Straatnaam moet ingevuld worden."),
-  addressHouseNumber: validateRequiredString(
-    "Huisnummer moet ingevuld worden.",
-  ),
-  addressPostalCode: validateRequiredString(
-    "Postcode moet ingevuld worden.",
-  ).refine((value) => validator.isPostalCode(value, "NL"), {
-    message: "Voer een geldig postcode in.",
-  }),
-  addressPlaceName: validateRequiredString("Plaatsnaam moet ingevuld worden."),
-  specialMessage: z.string(),
+const personalInformation = (isFamilyMember: boolean) => {
+  return {
+    personaliaGender: validateRequiredString("Selecteer uw geslacht"),
+    personaliaFirstName: validateRequiredString(
+      "Voornaam moet ingevuld worden.",
+    ),
+    personaliaInfix: z.string(),
+    personaliaLastname: validateRequiredString(
+      "Achternaam moet ingevuld worden",
+    ),
+    // NOTE: double check if this validation needs to be updated.
+    personaliaDateOfBirth: validateRequiredString(
+      "Geboortedatum moet ingevuld worden.",
+    ),
+    personaliaEmail: isFamilyMember
+      ? z
+          .email({ error: "Voer een geldig e-mailadres in." })
+          .optional()
+          .or(z.literal(""))
+      : z.email({ error: "Voer een geldig e-mailadres in." }),
+    personaliaPhoneCountry: z.string(),
+    personaliaPhone: z.string(),
+    addressStreet: validateRequiredString("Straatnaam moet ingevuld worden."),
+    addressHouseNumber: validateRequiredString(
+      "Huisnummer moet ingevuld worden.",
+    ),
+    addressPostalCode: validateRequiredString(
+      "Postcode moet ingevuld worden.",
+    ).refine((value) => validator.isPostalCode(value, "NL"), {
+      message: "Voer een geldig postcode in.",
+    }),
+    addressPlaceName: validateRequiredString(
+      "Plaatsnaam moet ingevuld worden.",
+    ),
+    specialMessage: z.string(),
+  };
 };
 
 const refinePersonalInformation = (
@@ -45,16 +58,26 @@ const refinePersonalInformation = (
   // since we are feeding the select input the country codes provided by the package.
   const phoneCountry = personaliaPhoneCountry as CountryCode;
   const phone = `${personaliaPhone}`;
-  const isValid = isValidPhoneNumber(phone, phoneCountry);
+  const regex = /^[^\s]+/;
+  const country = regex.exec(phoneCountry)?.[0] as CountryCode;
+
+  const isValid = isValidPhoneNumber(phone, country);
   return isValid;
 };
 
 export const familyMemberValidationSchema = z
   .object({
-    ...personalInformation,
+    ...personalInformation(true),
   })
   .refine(
     (data) => {
+      // NOTE: We return true here because phone number is optional for family members.
+      // If the user does not fill in a phone number we don't have to do any kind of validation.
+      if (!data.personaliaPhone) {
+        return true;
+      }
+
+      // NOTE: If the user does fill in a phone number we need to perform phone number validation.
       return refinePersonalInformation(
         data.personaliaPhoneCountry,
         data.personaliaPhone,
@@ -68,13 +91,14 @@ export const familyMemberValidationSchema = z
 
 export const enrollValidationSchema = z
   .object({
-    ...personalInformation,
+    ...personalInformation(false),
     termsAndConditions: validateRequiredString(
       "Om uw aanmelding te voltooien, dient u akkoord te gaan met de Algemene Voorwaarden.",
     ),
     familyMembers: z.array(familyMemberValidationSchema).optional(),
   })
   .refine(
+    // FIXME: for some reason validation on phone number + country is not always triggered correctly when switching country.
     (data) => {
       return refinePersonalInformation(
         data.personaliaPhoneCountry,

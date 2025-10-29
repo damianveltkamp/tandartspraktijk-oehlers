@@ -36,6 +36,7 @@ interface EnrollFormProps {
  */
 export const EnrollForm = ({ className }: EnrollFormProps) => {
   const [successfullySubmitted, setSuccessfullySubmitted] = useState(false);
+  const [errorWhileSubmitting, setErrorWhileSubmitting] = useState(true);
   const [isAddFamilyMemberDialogOpen, setIsAddFamilyMemberDialogOpen] =
     useState(false);
   const [shouldUpdateFamilyMemberIndex, setShouldUpdateFamilyMemberIndex] =
@@ -71,7 +72,6 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
     resolver: zodResolver(familyMemberValidationSchema),
   });
 
-  // TODO: handle submitting data. Send grid or some other integration.
   const onSubmit: SubmitHandler<EnrollFormValues> = async (data) => {
     try {
       const result = await sendEnrollmentEmail(data);
@@ -79,12 +79,12 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
       if (result.success) {
         setSuccessfullySubmitted(true);
       } else {
-        // TODO: show error state in the UI to let the user know something went wrong during submission.
+        setErrorWhileSubmitting(true);
         alert(result.message);
       }
     } catch (error) {
-      // TODO: show error state in the UI to let the user know something went wrong during submission.
       console.error(error);
+      setErrorWhileSubmitting(true);
       alert(error);
     }
   };
@@ -105,6 +105,27 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
         <h2 className="typography-headline-2">Bedankt voor het inschrijven</h2>
         <p className="typography-body">
           Wij nemen zo spoedig mogelijk contact met u op.
+        </p>
+        <LinkButton
+          isExternal={false}
+          variant="primary"
+          className="w-fit"
+          href="/"
+        >
+          Ga terug naar de homepagina
+        </LinkButton>
+      </div>
+    );
+  }
+
+  if (errorWhileSubmitting) {
+    return (
+      <div className="content-section flex flex-col gap-20">
+        <h2 className="typography-headline-2">Er is een fout opgetreden.</h2>
+        <p className="typography-body">
+          Tijdens het versturen van uw aanvraag is er een fout opgetreden.
+          Probeer op een later moment nogmaals het formulier te versturen of
+          neem contact met ons op.
         </p>
         <LinkButton
           isExternal={false}

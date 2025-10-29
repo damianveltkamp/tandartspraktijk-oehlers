@@ -22,7 +22,6 @@ import { getCountryOptions } from "@/utils/getCountryCodes";
 import { useState } from "react";
 import { RequiredInputDescription } from "./components/RequiredInputDescription/RequiredInputDescription";
 import { sendEnrollmentEmail } from "@/actions/sendEnrollmentEmail";
-import { Link } from "@/components/Link/Link";
 
 interface EnrollFormProps {
   className?: string;

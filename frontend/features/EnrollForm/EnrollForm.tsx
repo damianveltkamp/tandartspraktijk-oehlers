@@ -36,7 +36,7 @@ interface EnrollFormProps {
  */
 export const EnrollForm = ({ className }: EnrollFormProps) => {
   const [successfullySubmitted, setSuccessfullySubmitted] = useState(false);
-  const [errorWhileSubmitting, setErrorWhileSubmitting] = useState(true);
+  const [errorWhileSubmitting, setErrorWhileSubmitting] = useState(false);
   const [isAddFamilyMemberDialogOpen, setIsAddFamilyMemberDialogOpen] =
     useState(false);
   const [shouldUpdateFamilyMemberIndex, setShouldUpdateFamilyMemberIndex] =

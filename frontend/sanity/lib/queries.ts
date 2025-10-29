@@ -1,6 +1,6 @@
 import { defineQuery } from "next-sanity";
 
-export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
+export const settingsQuery = defineQuery(`*[_type == 'settings'][0]`);
 
 // const linkReference = /* groq */ `
 //   _type == "link" => {

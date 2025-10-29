@@ -49,5 +49,6 @@ export const ADDFAMILYMEMBERFORMDEFAULTVALUES: PersonalInformationValues = {
   personaliaInfix: "",
   personaliaLastname: "",
   personaliaPhone: "",
+  personaliaPhoneCountry: "NL (+31)",
   specialMessage: "",
 };

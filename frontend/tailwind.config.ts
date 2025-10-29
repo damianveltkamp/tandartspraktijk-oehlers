@@ -14,9 +14,9 @@ export default {
         ".main-grid": {
           "--main-grid-min-inline-space": "20px",
           "--main-grid-width": "1220px",
+          "--main-grid-tracks": `[full-width-start] minmax(var(--main-grid-min-inline-space), 1fr) [content-start] clamp(0px, calc(100% - var(--main-grid-min-inline-space) * 2), var(--main-grid-width)) [content-end] minmax(var(--main-grid-min-inline-space), 1fr) [full-width-end]`,
           display: "grid",
-          "grid-template-columns":
-            "[full-width-start] minmax(var(--main-grid-min-inline-space), 100%) [content-start] clamp(0px, calc(100% - var(--main-grid-min-inline-space) * 2), var(--main-grid-width)) [content-end] minmax(var(--main-grid-min-inline-space), 100%) [full-width-end];",
+          "grid-template-columns": "var(--main-grid-tracks)",
           "row-gap": "40px",
         },
         ".subgrid": {

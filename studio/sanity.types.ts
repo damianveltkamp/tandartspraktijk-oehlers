@@ -179,20 +179,7 @@ export type Settings = {
   _updatedAt: string
   _rev: string
   title: string
-  ogImage?: {
-    asset?: {
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-    }
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    alt?: string
-    metadataBase?: string
-    _type: 'image'
-  }
+  description: string
 }
 
 export type SanityAssistInstructionTask = {

@@ -69,8 +69,8 @@ export async function sendEnrollmentEmail(data: EnrollFormValues) {
                   <h3>${getFullName(familyMember.personaliaInfix, familyMember.personaliaFirstName, familyMember.personaliaLastname)}</h3>
                   <p><strong>Geslacht:</strong> ${familyMember.personaliaGender}</p>
                   <p><strong>Geboortedatum:</strong> ${formatDateOfBirth(familyMember.personaliaDateOfBirth)}</p>
-                  <p><strong>Email:</strong> ${familyMember.personaliaEmail}</p>
-                  <p><strong>Phone:</strong> ${familyMember.personaliaPhoneCountry} ${familyMember.personaliaPhone}</p>
+                  ${familyMember.personaliaEmail && `<p><strong>Email:</strong> ${familyMember.personaliaEmail}</p>`}
+                  ${familyMember.personaliaPhone && `<p><strong>Telefoonnummer:</strong> ${familyMember.personaliaPhoneCountry} ${familyMember.personaliaPhone}</p>`}
                   <p><strong>Bijzonderheden:</strong> ${familyMember.specialMessage}</p>
                   <p><strong>Adres:</strong> ${familyMember.addressStreet} ${familyMember.addressHouseNumber} ${familyMember.addressPostalCode} ${familyMember.addressPlaceName}</p>
                   ${isLast ? "" : "<br />"}
@@ -80,22 +80,20 @@ export async function sendEnrollmentEmail(data: EnrollFormValues) {
         : "<p>Geen gezinsleden toegevoegd</p>"
     }`;
 
-    // TODO: add family members.
-    // TODO: refactor the html to a react template.
     const result = await resend.emails.send({
       from: fromEmail,
       to: recipientEmail,
-      subject: `New Patient Enrollment from ${personaliaFirstName} ${personaliaLastname}`,
+      subject: `Nieuwe patiënt aanmelding van ${personaliaFirstName} ${personaliaLastname}`,
       replyTo: personaliaEmail,
       html: `
-        <h1>New Patient Enrollment</h1>
+        <h1>Patiënt aanmelding</h1>
 
         <h2>Persoonsgegevens</h2>
         <p><strong>Naam:</strong> ${getFullName(personaliaInfix, personaliaFirstName, personaliaLastname)}</p>
         <p><strong>Geslacht:</strong> ${personaliaGender}</p>
         <p><strong>Geboortedatum:</strong> ${formatDateOfBirth(personaliaDateOfBirth)}</p>
         <p><strong>Email:</strong> ${personaliaEmail}</p>
-        <p><strong>Phone:</strong> ${personaliaPhoneCountry} ${personaliaPhone}</p>
+        <p><strong>Telefoonnummer:</strong> ${personaliaPhoneCountry} ${personaliaPhone}</p>
         <p><strong>Bijzonderheden:</strong> ${specialMessage ? specialMessage : "Geen bijzonderheden"}</p>
         <p><strong>Adres:</strong> ${addressStreet} ${addressHouseNumber} ${addressPostalCode} ${addressPlaceName}</p>
         <br>

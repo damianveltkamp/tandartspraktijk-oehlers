@@ -23,10 +23,16 @@ export const Services = ({
         <p className="typography-body">{description}</p>
       </div>
       <div className="flex items-center justify-center gap-15 lg:justify-start">
-        <a href="#">
+        <a
+          href="https://tandartsregister.nl/tandartsen"
+          aria-label="Ga naar de website van het kwaliteitsregister KRT."
+        >
           <KRTLogo scale={1.3} />
         </a>
-        <a href="#">
+        <a
+          href="https://knmt.nl/"
+          aria-label="Ga naar de website van beroepsorganisatie KNMT."
+        >
           <KNMTLogo scale={0.5} />
         </a>
       </div>

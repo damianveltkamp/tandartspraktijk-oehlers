@@ -19,7 +19,7 @@ export const Select = ({
 
   return (
     <div className={twMerge("flex flex-col gap-5", className)}>
-      <label className="typography-body" htmlFor="">
+      <label className="typography-body" htmlFor={inputKey}>
         {label}
       </label>
       <div className="relative w-full">

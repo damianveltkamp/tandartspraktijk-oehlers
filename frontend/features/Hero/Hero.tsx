@@ -52,6 +52,8 @@ export const Hero = ({
           src={image.src}
           alt={image.alt}
           className="full-width-section hidden md:row-start-1 md:ml-auto md:block md:w-[55%]"
+          loading="eager"
+          fetchPriority="high"
         />
       </div>
       <Image
@@ -60,6 +62,8 @@ export const Hero = ({
         aspectRatio="landscape"
         className="content-section elevation-shadow mt-[-140px] md:hidden"
         borderRadius={24}
+        loading="eager"
+        fetchPriority="high"
       />
     </>
   );

@@ -1,16 +1,15 @@
 import "./globals.css";
+import type { Dentist, WithContext } from "schema-dts";
 
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { draftMode } from "next/headers";
-import { toPlainText, VisualEditing } from "next-sanity";
+import { VisualEditing } from "next-sanity/visual-editing";
 import { Toaster } from "sonner";
 
-import * as demo from "@/sanity/lib/demo";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import { getNotificationQuery, settingsQuery } from "@/sanity/lib/queries";
-import { resolveOpenGraphImage } from "@/sanity/lib/utils";
+// import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 import { handleError } from "./client-utils";
 import { Header } from "@/features/Header/Header";
 import { Footer } from "@/features/Footer/Footer";
@@ -18,38 +17,34 @@ import { NotificationModal } from "@/features/NotificationModal/NotificationModa
 import DraftModeToast from "@/components/DraftModeToast/DraftModeToast";
 import { notificationAdapter } from "@/adapters/objects/notification";
 
-/**
- * Generate metadata for the page.
- * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
- */
 export async function generateMetadata(): Promise<Metadata> {
   const { data: settings } = await sanityFetch({
     query: settingsQuery,
-    // Metadata should never contain stega
     stega: false,
   });
-  const title = settings?.title ?? demo.title;
-  const description = settings?.description ?? demo.description;
+  const title = settings?.title ?? "";
+  const description = settings?.description ?? "";
 
-  const ogImage = resolveOpenGraphImage(settings?.ogImage);
-  let metadataBase: undefined | URL = undefined;
-  try {
-    metadataBase = settings?.ogImage?.metadataBase
-      ? new URL(settings.ogImage.metadataBase)
-      : undefined;
-  } catch {
-    // ignore
-  }
+  // const ogImage = resolveOpenGraphImage(settings?.ogImage);
+  // let metadataBase: undefined | URL = undefined;
+  // try {
+  //   metadataBase = settings?.ogImage?.metadataBase
+  //     ? new URL(settings.ogImage.metadataBase)
+  //     : undefined;
+  // } catch {
+  //   // ignore
+  // }
+
   return {
-    metadataBase,
+    // metadataBase,
     title: {
       template: `%s | ${title}`,
       default: title,
     },
-    description: toPlainText(description),
-    openGraph: {
-      images: ogImage ? [ogImage] : [],
-    },
+    description: description,
+    // openGraph: {
+    //   images: ogImage ? [ogImage] : [],
+    // },
   };
 }
 
@@ -68,6 +63,35 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const structuredData: WithContext<Dentist> = {
+    "@context": "https://schema.org",
+    "@type": "Dentist",
+    name: "Tandartspraktijk Oehlers",
+    url: "https://tandartsoehlers.nl/",
+    telephone: "+31 20 482 3573",
+    email: "info@tandartsoehlers.nl",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Van Beekstraat 124 C",
+      addressLocality: "Landsmeer",
+      postalCode: "1121 NT",
+      addressCountry: "NL",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 52.42891454569118,
+      longitude: 4.926430487612518,
+    },
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday"],
+        opens: "08:00",
+        closes: "17:00",
+      },
+    ],
+  };
+
   const [{ data: notification }] = await Promise.all([
     sanityFetch({ query: getNotificationQuery }),
   ]);
@@ -79,6 +103,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -98,7 +128,6 @@ export default async function RootLayout({
           {children}
         </main>
         <Footer />
-        <SpeedInsights />
       </body>
     </html>
   );

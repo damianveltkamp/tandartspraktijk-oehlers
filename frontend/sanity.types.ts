@@ -179,20 +179,7 @@ export type Settings = {
   _updatedAt: string;
   _rev: string;
   title: string;
-  ogImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    metadataBase?: string;
-    _type: "image";
-  };
+  description: string;
 };
 
 export type SanityAssistInstructionTask = {
@@ -492,7 +479,7 @@ export type AllSanitySchemaTypes =
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: sanity/lib/queries.ts
 // Variable: settingsQuery
-// Query: *[_type == "settings"][0]
+// Query: *[_type == 'settings'][0]
 export type SettingsQueryResult = {
   _id: string;
   _type: "settings";
@@ -500,20 +487,7 @@ export type SettingsQueryResult = {
   _updatedAt: string;
   _rev: string;
   title: string;
-  ogImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    metadataBase?: string;
-    _type: "image";
-  };
+  description: string;
 } | null;
 // Variable: getHomepageQuery
 // Query: *[_type == 'homePage'][0]{    _id,    _type,    name,    hero,    faq,    services,    contact,    image,    emergencyService,    team,    treatments,  }
@@ -555,7 +529,7 @@ export type SitemapDataResult = Array<never>;
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[_type == "settings"][0]': SettingsQueryResult;
+    "*[_type == 'settings'][0]": SettingsQueryResult;
     "\n  *[_type == 'homePage'][0]{\n    _id,\n    _type,\n    name,\n    hero,\n    faq,\n    services,\n    contact,\n    image,\n    emergencyService,\n    team,\n    treatments,\n  }\n": GetHomepageQueryResult;
     "\n  *[_type == 'enrollPage'][0]{\n    _id,\n    _type,\n    name,\n    hero,\n  }\n": GetEnrollmentPageQueryResult;
     "\n  *[_type == 'notification'][0]{\n    _id,\n    _type,\n    heading,\n    description,\n    showNotification,\n  }\n": GetNotificationQueryResult;

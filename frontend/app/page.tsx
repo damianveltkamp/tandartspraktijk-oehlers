@@ -38,6 +38,7 @@ export default async function Home() {
           navigationItems={[
             { text: "Ons team", slug: "#feature-team" },
             { text: "Onze diensten", slug: "#feature-services" },
+            { text: "Onze behandelingen", slug: "#feature-treatments" },
             { text: "Veelgestelde vragen", slug: "#feature-faq" },
             { text: "Contact", slug: "#contact" },
             { text: "Spoeddienst", slug: "#emergency-contact" },
@@ -47,7 +48,11 @@ export default async function Home() {
           {team && <Team className="content-section" {...team} />}
           {services && <Services className="content-section" {...services} />}
           {treatments && (
-            <AccordionBlock className="content-section" {...treatments} />
+            <AccordionBlock
+              id="feature-treatments"
+              className="content-section"
+              {...treatments}
+            />
           )}
           {image && (
             <Image
@@ -59,7 +64,13 @@ export default async function Home() {
             />
           )}
           <div className="subgrid full-width-section bg-primary py-40 pb-[150px] lg:block lg:bg-transparent lg:p-0">
-            {faq && <AccordionBlock className="content-section" {...faq} />}
+            {faq && (
+              <AccordionBlock
+                id="feature-faq"
+                className="content-section"
+                {...faq}
+              />
+            )}
           </div>
           {image && (
             <Image

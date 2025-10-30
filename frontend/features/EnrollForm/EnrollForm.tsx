@@ -41,6 +41,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
     useState(false);
   const [shouldUpdateFamilyMemberIndex, setShouldUpdateFamilyMemberIndex] =
     useState<null | number>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -73,19 +74,20 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
   });
 
   const onSubmit: SubmitHandler<EnrollFormValues> = async (data) => {
+    setIsSubmitting(true);
     try {
       const result = await sendEnrollmentEmail(data);
 
       if (result.success) {
         setSuccessfullySubmitted(true);
+        setIsSubmitting(false);
       } else {
         setErrorWhileSubmitting(true);
-        alert(result.message);
+        setIsSubmitting(false);
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
       setErrorWhileSubmitting(true);
-      alert(error);
+      setIsSubmitting(false);
     }
   };
 
@@ -245,8 +247,13 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
           )}
           <RequiredInputDescription />
         </div>
-        <Button type="submit" variant="secondary" className="w-full lg:w-fit">
-          Submit
+        <Button
+          type="submit"
+          variant="secondary"
+          className="w-full disabled:cursor-not-allowed disabled:opacity-50 lg:w-fit"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Aanvraag word verstuurd..." : "Aanvraag versturen"}
         </Button>
       </form>
       <AddFamilyMemberDialog

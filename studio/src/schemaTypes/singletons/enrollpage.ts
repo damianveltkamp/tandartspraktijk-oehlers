@@ -21,6 +21,24 @@ export const enrollPage = defineType({
       readOnly: true,
     }),
     defineField({
+      name: 'showEnrollmentPage',
+      title: 'Show the enrollment form.',
+      type: 'boolean',
+      description: 'Check this box to display the enrollment form on the page.',
+      initialValue: false,
+      options: {
+        layout: 'checkbox',
+      },
+    }),
+    defineField({
+      name: 'enrollmentUnavailableText',
+      title: 'Enrollment unavailable text',
+      type: 'string',
+      hidden: ({document}) => {
+        return Boolean(document?.showEnrollmentPage)
+      },
+    }),
+    defineField({
       name: 'hero',
       title: 'Hero section',
       type: 'hero',

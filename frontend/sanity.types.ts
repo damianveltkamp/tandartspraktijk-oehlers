@@ -67,6 +67,8 @@ export type EnrollPage = {
   _updatedAt: string;
   _rev: string;
   name: string;
+  showEnrollmentPage?: boolean;
+  enrollmentUnavailableText?: string;
   hero: Hero;
 };
 
@@ -505,11 +507,13 @@ export type GetHomepageQueryResult = {
   treatments: Accordion;
 } | null;
 // Variable: getEnrollmentPageQuery
-// Query: *[_type == 'enrollPage'][0]{    _id,    _type,    name,    hero,  }
+// Query: *[_type == 'enrollPage'][0]{    _id,    _type,    name,    showEnrollmentPage,    enrollmentUnavailableText,    hero,  }
 export type GetEnrollmentPageQueryResult = {
   _id: string;
   _type: "enrollPage";
   name: string;
+  showEnrollmentPage: boolean | null;
+  enrollmentUnavailableText: string | null;
   hero: Hero;
 } | null;
 // Variable: getNotificationQuery
@@ -531,7 +535,7 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == 'settings'][0]": SettingsQueryResult;
     "\n  *[_type == 'homePage'][0]{\n    _id,\n    _type,\n    name,\n    hero,\n    faq,\n    services,\n    contact,\n    image,\n    emergencyService,\n    team,\n    treatments,\n  }\n": GetHomepageQueryResult;
-    "\n  *[_type == 'enrollPage'][0]{\n    _id,\n    _type,\n    name,\n    hero,\n  }\n": GetEnrollmentPageQueryResult;
+    "\n  *[_type == 'enrollPage'][0]{\n    _id,\n    _type,\n    name,\n    showEnrollmentPage,\n    enrollmentUnavailableText,\n    hero,\n  }\n": GetEnrollmentPageQueryResult;
     "\n  *[_type == 'notification'][0]{\n    _id,\n    _type,\n    heading,\n    description,\n    showNotification,\n  }\n": GetNotificationQueryResult;
     '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult;
   }

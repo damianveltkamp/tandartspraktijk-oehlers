@@ -306,6 +306,20 @@
         },
         "optional": false
       },
+      "showEnrollmentPage": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "enrollmentUnavailableText": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "hero": {
         "type": "objectAttribute",
         "value": {

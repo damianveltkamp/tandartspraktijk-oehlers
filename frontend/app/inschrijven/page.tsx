@@ -14,7 +14,12 @@ export default async function Home() {
   return (
     <div className="main-grid">
       {hero && <Hero {...hero} />}
-      <EnrollForm className="content-section" />
+      {page?.showEnrollmentPage && <EnrollForm className="content-section" />}
+      {!page?.showEnrollmentPage && (
+        <div className="content-section">
+          <p className="typography-body">{page?.enrollmentUnavailableText}</p>
+        </div>
+      )}
     </div>
   );
 }

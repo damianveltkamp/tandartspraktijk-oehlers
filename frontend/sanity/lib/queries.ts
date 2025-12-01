@@ -36,6 +36,8 @@ export const getEnrollmentPageQuery = defineQuery(`
     _id,
     _type,
     name,
+    showEnrollmentPage,
+    enrollmentUnavailableText,
     hero,
   }
 `);

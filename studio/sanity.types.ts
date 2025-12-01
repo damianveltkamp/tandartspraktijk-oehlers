@@ -67,6 +67,8 @@ export type EnrollPage = {
   _updatedAt: string
   _rev: string
   name: string
+  showEnrollmentPage?: boolean
+  enrollmentUnavailableText?: string
   hero: Hero
 }
 

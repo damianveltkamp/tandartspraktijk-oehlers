@@ -1,8 +1,23 @@
+import type { Metadata } from "next";
+
 import { heroAdapter } from "@/adapters/objects/hero";
 import { EnrollForm } from "@/features/EnrollForm/EnrollForm";
 import { Hero } from "@/features/Hero/Hero";
 import { sanityFetch } from "@/sanity/lib/live";
 import { getEnrollmentPageQuery } from "@/sanity/lib/queries";
+
+const title = "Inschrijven";
+const description =
+  "Schrijf u en uw gezin in als nieuwe patiënt bij Tandartspraktijk Oehlers in Landsmeer.";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+  },
+};
 
 export default async function Home() {
   const [{ data: page }] = await Promise.all([

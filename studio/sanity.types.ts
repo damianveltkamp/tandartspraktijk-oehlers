@@ -227,6 +227,14 @@ export type Settings = {
   _rev: string
   title: string
   description: string
+  ogImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
 }
 
 export type SanityAssistInstructionTask = {

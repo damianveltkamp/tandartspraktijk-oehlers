@@ -13,7 +13,7 @@ import {
   getNotificationQuery,
   settingsQuery,
 } from "@/sanity/lib/queries";
-// import { resolveOpenGraphImage } from "@/sanity/lib/utils";
+import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 import { handleError } from "./client-utils";
 import { Header } from "@/features/Header/Header";
 import { Footer } from "@/features/Footer/Footer";
@@ -29,27 +29,36 @@ export async function generateMetadata(): Promise<Metadata> {
   });
   const title = settings?.title ?? "";
   const description = settings?.description ?? "";
+  const ogImage = resolveOpenGraphImage(settings?.ogImage);
 
-  // const ogImage = resolveOpenGraphImage(settings?.ogImage);
-  // let metadataBase: undefined | URL = undefined;
-  // try {
-  //   metadataBase = settings?.ogImage?.metadataBase
-  //     ? new URL(settings.ogImage.metadataBase)
-  //     : undefined;
-  // } catch {
-  //   // ignore
-  // }
+  // Without a metadataBase Next resolves every OG/Twitter image to a relative
+  // URL, which the social crawlers cannot fetch. `new URL('')` throws, so an
+  // unset variable has to stay undefined rather than become an empty URL.
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   return {
-    // metadataBase,
+    metadataBase: baseUrl ? new URL(baseUrl) : undefined,
     title: {
       template: `%s | ${title}`,
       default: title,
     },
     description: description,
-    // openGraph: {
-    //   images: ogImage ? [ogImage] : [],
-    // },
+    manifest: "/site.webmanifest",
+    icons: {
+      icon: [
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      ],
+      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    },
+    openGraph: {
+      type: "website",
+      locale: "nl_NL",
+      siteName: title,
+      title,
+      description,
+      images: ogImage ? [ogImage] : [],
+    },
   };
 }
 
@@ -110,7 +119,7 @@ export default async function RootLayout({
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
-    <html lang="en">
+    <html lang="nl">
       <head>
         <script
           type="application/ld+json"

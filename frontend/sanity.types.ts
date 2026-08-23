@@ -12,13 +12,63 @@
  * ---------------------------------------------------------------------------------
  */
 
-// Source: schema.json
+export declare const internalGroqTypeReferenceTo: unique symbol;
+
+// Source: ../studio/schema.json
+export type SanityFileAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+};
+
+export type VideoHero = {
+  _type: "videoHero";
+  heading: string;
+  description: string;
+  usps?: Array<string>;
+  links?: Array<
+    {
+      _key: string;
+    } & Link
+  >;
+  image: CustomImage;
+  video: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: "file";
+  };
+};
+
 export type TeamMember = {
   _type: "teamMember";
   name: string;
   jobTitle: string;
   jobDescription?: string;
   image: CustomImage;
+};
+
+export type Team = {
+  _type: "team";
+  heading: string;
+  description: string;
+  members?: Array<
+    {
+      _key: string;
+    } & TeamMember
+  >;
+};
+
+export type Services = {
+  _type: "services";
+  heading: string;
+  description: string;
+  logos?: Array<
+    {
+      _key: string;
+    } & Logo
+  >;
+  costIndicationLink: RestrictedLink;
 };
 
 export type RestrictedLink = {
@@ -41,10 +91,42 @@ export type Link = {
   isExternalLink?: boolean;
 };
 
+export type Hero = {
+  _type: "hero";
+  heading: string;
+  description: string;
+  usps?: Array<string>;
+  links?: Array<
+    {
+      _key: string;
+    } & Link
+  >;
+  image: CustomImage;
+};
+
 export type EnrollForm = {
   _type: "enrollForm";
   heading: string;
   description: string;
+};
+
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type CustomImage = {
+  _type: "customImage";
+  alt: string;
+  image: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
 };
 
 export type ContactDetail = {
@@ -54,10 +136,31 @@ export type ContactDetail = {
   type: "email" | "phone" | "website" | "location";
 };
 
+export type Contact = {
+  _type: "contact";
+  heading: string;
+  description: string;
+  contactDetails?: Array<
+    {
+      _key: string;
+    } & ContactDetail
+  >;
+};
+
 export type AccordionItem = {
   _type: "accordionItem";
   heading: string;
   description: string;
+};
+
+export type Accordion = {
+  _type: "accordion";
+  heading: string;
+  accordionItems?: Array<
+    {
+      _key: string;
+    } & AccordionItem
+  >;
 };
 
 export type EnrollPage = {
@@ -79,7 +182,7 @@ export type HomePage = {
   _updatedAt: string;
   _rev: string;
   name: string;
-  hero: Hero;
+  hero: VideoHero;
   team: Team;
   services: Services;
   treatments: Accordion;
@@ -89,78 +192,20 @@ export type HomePage = {
   emergencyService: Contact;
 };
 
-export type Contact = {
-  _type: "contact";
-  heading: string;
-  description: string;
-  contactDetails?: Array<
-    {
-      _key: string;
-    } & ContactDetail
-  >;
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 };
 
-export type CustomImage = {
-  _type: "customImage";
-  alt: string;
-  image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-};
-
-export type Accordion = {
-  _type: "accordion";
-  heading: string;
-  accordionItems?: Array<
-    {
-      _key: string;
-    } & AccordionItem
-  >;
-};
-
-export type Services = {
-  _type: "services";
-  heading: string;
-  description: string;
-  logos?: Array<
-    {
-      _key: string;
-    } & Logo
-  >;
-  costIndicationLink: RestrictedLink;
-};
-
-export type Team = {
-  _type: "team";
-  heading: string;
-  description: string;
-  members?: Array<
-    {
-      _key: string;
-    } & TeamMember
-  >;
-};
-
-export type Hero = {
-  _type: "hero";
-  heading: string;
-  description: string;
-  usps?: Array<string>;
-  links?: Array<
-    {
-      _key: string;
-    } & Link
-  >;
-  image: CustomImage;
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
 };
 
 export type Notification = {
@@ -222,14 +267,16 @@ export type SanityAssistOutputField = {
   path?: string;
 };
 
+export type AssistInstructionContextReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "assist.instruction.context";
+};
+
 export type SanityAssistInstructionContext = {
   _type: "sanity.assist.instruction.context";
-  reference: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "assist.instruction.context";
-  };
+  reference: AssistInstructionContextReference;
 };
 
 export type AssistInstructionContext = {
@@ -345,20 +392,16 @@ export type SanityImageDimensions = {
   aspectRatio: number;
 };
 
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
+export type SanityImageMetadata = {
+  _type: "sanity.imageMetadata";
+  location?: Geopoint;
+  dimensions?: SanityImageDimensions;
+  palette?: SanityImagePalette;
+  lqip?: string;
+  blurHash?: string;
+  thumbHash?: string;
+  hasAlpha?: boolean;
+  isOpaque?: boolean;
 };
 
 export type SanityFileAsset = {
@@ -372,15 +415,22 @@ export type SanityFileAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   source?: SanityAssetSourceData;
+};
+
+export type SanityAssetSourceData = {
+  _type: "sanity.assetSourceData";
+  name?: string;
+  id?: string;
+  url?: string;
 };
 
 export type SanityImageAsset = {
@@ -394,27 +444,16 @@ export type SanityImageAsset = {
   title?: string;
   description?: string;
   altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
   uploadId?: string;
-  path?: string;
-  url?: string;
+  path: string;
+  url: string;
   metadata?: SanityImageMetadata;
   source?: SanityAssetSourceData;
-};
-
-export type SanityImageMetadata = {
-  _type: "sanity.imageMetadata";
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
 };
 
 export type Geopoint = {
@@ -430,29 +469,27 @@ export type Slug = {
   source?: string;
 };
 
-export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
-  name?: string;
-  id?: string;
-  url?: string;
-};
-
 export type AllSanitySchemaTypes =
+  | SanityFileAssetReference
+  | VideoHero
   | TeamMember
+  | Team
+  | Services
   | RestrictedLink
   | Logo
   | Link
+  | Hero
   | EnrollForm
+  | SanityImageAssetReference
+  | CustomImage
   | ContactDetail
+  | Contact
   | AccordionItem
+  | Accordion
   | EnrollPage
   | HomePage
-  | Contact
-  | CustomImage
-  | Accordion
-  | Services
-  | Team
-  | Hero
+  | SanityImageCrop
+  | SanityImageHotspot
   | Notification
   | Settings
   | SanityAssistInstructionTask
@@ -460,6 +497,7 @@ export type AllSanitySchemaTypes =
   | SanityAssistSchemaTypeAnnotations
   | SanityAssistOutputType
   | SanityAssistOutputField
+  | AssistInstructionContextReference
   | SanityAssistInstructionContext
   | AssistInstructionContext
   | SanityAssistInstructionUserInput
@@ -470,15 +508,13 @@ export type AllSanitySchemaTypes =
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
-  | SanityImageHotspot
-  | SanityImageCrop
-  | SanityFileAsset
-  | SanityImageAsset
   | SanityImageMetadata
+  | SanityFileAsset
+  | SanityAssetSourceData
+  | SanityImageAsset
   | Geopoint
-  | Slug
-  | SanityAssetSourceData;
-export declare const internalGroqTypeReferenceTo: unique symbol;
+  | Slug;
+
 // Source: sanity/lib/queries.ts
 // Variable: settingsQuery
 // Query: *[_type == 'settings'][0]
@@ -491,13 +527,41 @@ export type SettingsQueryResult = {
   title: string;
   description: string;
 } | null;
+
+// Source: sanity/lib/queries.ts
+// Variable: getHeaderPhoneQuery
+// Query: *[_type == 'homePage'][0]{    "phone": contact.contactDetails[type == 'phone'][0]{linkText, href},  }
+export type GetHeaderPhoneQueryResult = {
+  phone: {
+    linkText: string;
+    href: string;
+  } | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
 // Variable: getHomepageQuery
-// Query: *[_type == 'homePage'][0]{    _id,    _type,    name,    hero,    faq,    services,    contact,    image,    emergencyService,    team,    treatments,  }
+// Query: *[_type == 'homePage'][0]{    _id,    _type,    name,    hero{      ...,      video{asset->{url}},    },    faq,    services,    contact,    image,    emergencyService,    team,    treatments,  }
 export type GetHomepageQueryResult = {
   _id: string;
   _type: "homePage";
   name: string;
-  hero: Hero;
+  hero: {
+    _type: "videoHero";
+    heading: string;
+    description: string;
+    usps?: Array<string>;
+    links?: Array<
+      {
+        _key: string;
+      } & Link
+    >;
+    image: CustomImage;
+    video: {
+      asset: {
+        url: string;
+      } | null;
+    };
+  };
   faq: Accordion;
   services: Services;
   contact: Contact;
@@ -506,6 +570,8 @@ export type GetHomepageQueryResult = {
   team: Team;
   treatments: Accordion;
 } | null;
+
+// Source: sanity/lib/queries.ts
 // Variable: getEnrollmentPageQuery
 // Query: *[_type == 'enrollPage'][0]{    _id,    _type,    name,    showEnrollmentPage,    enrollmentUnavailableText,    hero,  }
 export type GetEnrollmentPageQueryResult = {
@@ -516,6 +582,8 @@ export type GetEnrollmentPageQueryResult = {
   enrollmentUnavailableText: string | null;
   hero: Hero;
 } | null;
+
+// Source: sanity/lib/queries.ts
 // Variable: getNotificationQuery
 // Query: *[_type == 'notification'][0]{    _id,    _type,    heading,    description,    showNotification,  }
 export type GetNotificationQueryResult = {
@@ -525,6 +593,8 @@ export type GetNotificationQueryResult = {
   description: string;
   showNotification: boolean | null;
 } | null;
+
+// Source: sanity/lib/queries.ts
 // Variable: sitemapData
 // Query: *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {    "slug": slug.current,    _type,    _updatedAt,  }
 export type SitemapDataResult = Array<never>;
@@ -534,7 +604,8 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == 'settings'][0]": SettingsQueryResult;
-    "\n  *[_type == 'homePage'][0]{\n    _id,\n    _type,\n    name,\n    hero,\n    faq,\n    services,\n    contact,\n    image,\n    emergencyService,\n    team,\n    treatments,\n  }\n": GetHomepageQueryResult;
+    "\n  *[_type == 'homePage'][0]{\n    \"phone\": contact.contactDetails[type == 'phone'][0]{linkText, href},\n  }\n": GetHeaderPhoneQueryResult;
+    "\n  *[_type == 'homePage'][0]{\n    _id,\n    _type,\n    name,\n    hero{\n      ...,\n      video{asset->{url}},\n    },\n    faq,\n    services,\n    contact,\n    image,\n    emergencyService,\n    team,\n    treatments,\n  }\n": GetHomepageQueryResult;
     "\n  *[_type == 'enrollPage'][0]{\n    _id,\n    _type,\n    name,\n    showEnrollmentPage,\n    enrollmentUnavailableText,\n    hero,\n  }\n": GetEnrollmentPageQueryResult;
     "\n  *[_type == 'notification'][0]{\n    _id,\n    _type,\n    heading,\n    description,\n    showNotification,\n  }\n": GetNotificationQueryResult;
     '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult;

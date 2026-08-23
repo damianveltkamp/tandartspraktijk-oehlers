@@ -1,7 +1,11 @@
 import type { ContactProps } from "@/features/Contact/Contact.types";
 import type { Contact } from "@/sanity.types";
+import type { StegaBranded } from "@sanity/client/stega";
+import { stegaClean } from "@sanity/client/stega";
 
-export const contactAdapter = (data: Contact | null | undefined) => {
+export const contactAdapter = (
+  data: Contact | null | StegaBranded<Contact> | undefined,
+) => {
   if (!data) return null;
 
   const contactData: ContactProps = {
@@ -12,7 +16,9 @@ export const contactAdapter = (data: Contact | null | undefined) => {
         return {
           title: detail.linkText,
           url: detail.href,
-          type: detail.type,
+          // `type` is compared against string literals downstream, so the
+          // stega encoding has to be stripped first.
+          type: stegaClean(detail.type),
         };
       }) ?? [],
   };

@@ -15,6 +15,7 @@ import {customImage} from './objects/image'
 import {restrictedLink} from './objects/restrictedLink'
 import {contact} from './objects/contact'
 import {contactDetail} from './objects/contactDetail'
+import {videoHero} from './objects/videoHero'
 
 const singletons = [settings, notification, homePage, enrollPage]
 
@@ -32,6 +33,7 @@ const objects = [
   services,
   team,
   teamMember,
+  videoHero,
 ]
 
 export const schemaTypes = [...singletons, ...objects]

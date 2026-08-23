@@ -16,10 +16,12 @@ export async function sendEnrollmentEmail(data: EnrollFormValues) {
     );
   }
 
-  const recipientEmail = process.env.RESEND_TO_EMAIL;
+  const recipientEmails = process.env.RESEND_TO_EMAIL?.split(",")
+    .map((email) => email.trim())
+    .filter(Boolean);
   const fromEmail = process.env.RESEND_FROM_EMAIL;
 
-  if (!recipientEmail) {
+  if (!recipientEmails?.length) {
     throw new Error("Email recipient not configured in environment.");
   }
 
@@ -82,7 +84,7 @@ export async function sendEnrollmentEmail(data: EnrollFormValues) {
 
     const result = await resend.emails.send({
       from: fromEmail,
-      to: recipientEmail,
+      to: recipientEmails,
       subject: `Nieuwe patiënt aanmelding van ${personaliaFirstName} ${personaliaLastname}`,
       replyTo: personaliaEmail,
       html: `

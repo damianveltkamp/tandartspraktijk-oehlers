@@ -1,4 +1,5 @@
-import {CogIcon, DocumentIcon} from '@sanity/icons'
+import {CogIcon} from '@sanity/icons/Cog'
+import {DocumentIcon} from '@sanity/icons/Document'
 import type {StructureBuilder, StructureResolver} from 'sanity/structure'
 import pluralize from 'pluralize-esm'
 

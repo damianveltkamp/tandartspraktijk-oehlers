@@ -2,6 +2,18 @@ import { defineQuery } from "next-sanity";
 
 export const settingsQuery = defineQuery(`*[_type == 'settings'][0]`);
 
+/**
+ * The site header shows the practice's phone number on every route, but the
+ * number is only stored once, on the homepage's contact section. Reading it
+ * from there keeps a single source of truth rather than duplicating it into
+ * the settings singleton, where the two copies would eventually drift.
+ */
+export const getHeaderPhoneQuery = defineQuery(`
+  *[_type == 'homePage'][0]{
+    "phone": contact.contactDetails[type == 'phone'][0]{linkText, href},
+  }
+`);
+
 // const linkReference = /* groq */ `
 //   _type == "link" => {
 //     "page": page->slug.current,
@@ -20,7 +32,10 @@ export const getHomepageQuery = defineQuery(`
     _id,
     _type,
     name,
-    hero,
+    hero{
+      ...,
+      video{asset->{url}},
+    },
     faq,
     services,
     contact,

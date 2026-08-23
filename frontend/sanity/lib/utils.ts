@@ -19,8 +19,21 @@ export function resolveOpenGraphImage(
   width = 1200,
   height = 627,
 ) {
-  if (!image) return;
-  const url = urlForImage(image).width(width).height(height).fit("crop").url();
+  // Sanity keeps the image wrapper object around as soon as any subfield is
+  // set, so an `ogImage` with only `alt` filled in passes a plain null check
+  // and then makes the url builder throw. This runs inside the root
+  // `generateMetadata`, where a throw takes down every route, so both the
+  // missing asset and a malformed `_ref` have to degrade to "no OG image".
+  if (!image?.asset?._ref) return;
+
+  let url: string | undefined;
+  try {
+    url = urlForImage(image).width(width).height(height).fit("crop").url();
+  } catch {
+    return;
+  }
+  if (!url) return;
+
   return { url, alt: image.alt ?? "", width, height };
 }
 

@@ -15,7 +15,22 @@ const subscribe = (onStoreChange: () => void) => {
   };
 };
 
-const getSnapshot = () => sessionStorage.getItem(STORAGE_KEY) !== null;
+// Storage access does not just come back empty in some contexts (Safari
+// private browsing, blocked site data, embedded webviews) -- it throws. The
+// in-memory flag is the fallback there: without it a failing write would leave
+// the modal open with no way to close it, and a failing read during render
+// would break hydration of the whole tree.
+let dismissedInMemory = false;
+
+const getSnapshot = () => {
+  if (dismissedInMemory) return true;
+
+  try {
+    return sessionStorage.getItem(STORAGE_KEY) !== null;
+  } catch {
+    return false;
+  }
+};
 // The server cannot know whether this visitor already dismissed the modal.
 // Rendering it as dismissed keeps the markup stable through hydration; React
 // then re-reads the real value on the client.
@@ -40,12 +55,23 @@ export const NotificationModal = ({
   );
 
   const closeModal = () => {
-    sessionStorage.setItem(STORAGE_KEY, "true");
+    dismissedInMemory = true;
+    try {
+      sessionStorage.setItem(STORAGE_KEY, "true");
+    } catch {
+      // Dismissal still holds for this mount via `dismissedInMemory`; it just
+      // will not survive a reload.
+    }
     window.dispatchEvent(new Event(CHANGE_EVENT));
   };
 
   return (
-    <Dialog.Root open={!isDismissed}>
+    <Dialog.Root
+      open={!isDismissed}
+      onOpenChange={(open) => {
+        if (!open) closeModal();
+      }}
+    >
       <Dialog.Portal>
         <Dialog.Overlay />
         <Dialog.ContentContainer className="max-w-[650px]">

@@ -1,11 +1,13 @@
 import type { MetadataRoute } from "next";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const domain: string = process.env.NEXT_PUBLIC_BASE_URL ?? "";
+import { getBaseUrl } from "@/utils/getBaseUrl";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const domain = getBaseUrl() ?? "";
 
   const sitemap: MetadataRoute.Sitemap = [
     {
-      url: domain as string,
+      url: domain,
       lastModified: new Date(),
       priority: 1,
       changeFrequency: "monthly",

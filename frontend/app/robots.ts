@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 
+import { getBaseUrl } from "@/utils/getBaseUrl";
+
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = getBaseUrl();
   // Only a positively identified non-production Vercel deployment is hidden
   // from crawlers. Anything we cannot identify -- a self-hosted build, a local
   // run -- stays indexable, so a missing variable can never de-index the live

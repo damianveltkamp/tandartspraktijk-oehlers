@@ -8,7 +8,11 @@ import { VisualEditing } from "next-sanity/visual-editing";
 import { Toaster } from "sonner";
 
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
-import { getNotificationQuery, settingsQuery } from "@/sanity/lib/queries";
+import {
+  getHeaderPhoneQuery,
+  getNotificationQuery,
+  settingsQuery,
+} from "@/sanity/lib/queries";
 // import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 import { handleError } from "./client-utils";
 import { Header } from "@/features/Header/Header";
@@ -16,6 +20,7 @@ import { Footer } from "@/features/Footer/Footer";
 import { NotificationModal } from "@/features/NotificationModal/NotificationModal";
 import DraftModeToast from "@/components/DraftModeToast/DraftModeToast";
 import { notificationAdapter } from "@/adapters/objects/notification";
+import { headerPhoneAdapter } from "@/adapters/objects/headerPhone";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { data: settings } = await sanityFetch({
@@ -92,9 +97,12 @@ export default async function RootLayout({
     ],
   };
 
-  const [{ data: notification }] = await Promise.all([
+  const [{ data: notification }, { data: headerData }] = await Promise.all([
     sanityFetch({ query: getNotificationQuery }),
+    sanityFetch({ query: getHeaderPhoneQuery }),
   ]);
+
+  const phone = headerPhoneAdapter(headerData?.phone);
 
   const showNotification = notification?.showNotification;
   const notificationProps = notificationAdapter(notification);
@@ -120,7 +128,7 @@ export default async function RootLayout({
           </>
         )}
         <SanityLive onError={handleError} />
-        <Header />
+        <Header phone={phone} />
         <main>
           {showNotification && notificationProps && (
             <NotificationModal {...notificationProps} />

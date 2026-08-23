@@ -36,6 +36,7 @@
     ".next/types/**/*.ts",
     "eslint.config.mjs",
     "prettier.config.js",
+    "postcss.config.mjs",
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [

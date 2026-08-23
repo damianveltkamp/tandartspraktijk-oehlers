@@ -1,5 +1,5 @@
 import {defineField, defineType} from 'sanity'
-import {DocumentIcon} from '@sanity/icons'
+import {DocumentIcon} from '@sanity/icons/Document'
 
 export const homePage = defineType({
   name: 'homePage',
@@ -18,7 +18,7 @@ export const homePage = defineType({
     defineField({
       name: 'hero',
       title: 'Hero section',
-      type: 'hero',
+      type: 'videoHero',
       validation: (Rule) => Rule.required(),
     }),
     defineField({

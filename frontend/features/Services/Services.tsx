@@ -1,5 +1,5 @@
+import { BevlogenTandartsenLogo } from "@/components/BevlogenTandartsenLogo/BevlogenTandartsenLogo";
 import { LinkButton } from "@/components/Button/Button";
-import { KNMTLogo } from "@/components/KNMTLogo/KNMTLogo";
 import { KRTLogo } from "@/components/KRTLogo/KRTLogo";
 import { twMerge } from "tailwind-merge";
 import type { ServicesProps } from "./Services.types";
@@ -30,10 +30,10 @@ export const Services = ({
           <KRTLogo scale={1.3} />
         </a>
         <a
-          href="https://knmt.nl/"
-          aria-label="Ga naar de website van beroepsorganisatie KNMT."
+          href="https://bevlogentandartsen.nl/"
+          aria-label="Ga naar de website van Bevlogen Tandartsen."
         >
-          <KNMTLogo scale={0.5} />
+          <BevlogenTandartsenLogo scale={0.65} />
         </a>
       </div>
       <div className="w-full lg:w-fit">

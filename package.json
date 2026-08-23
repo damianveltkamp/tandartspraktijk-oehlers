@@ -35,5 +35,8 @@
     "@sanity/prettier-config": "^2.0.1",
     "npm-run-all2": "^5.0.2",
     "prettier": "^3.6.2"
+  },
+  "overrides": {
+    "@sanity/sdk-react": "2.19.0"
   }
 }

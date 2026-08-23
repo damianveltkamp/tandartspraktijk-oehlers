@@ -3,12 +3,28 @@
 
 :root {
   --animation-timing-smooth: cubic-bezier(0.87, 0, 0.13, 1);
+  /* Height of the site header: the 46px call button plus its vertical padding.
+     The VideoHero pulls itself up by this amount so the video runs behind the
+     header. Kept in sync with the header's own padding at each breakpoint. */
+  --header-height: 90px;
+}
+
+@media (min-width: 601px) {
+  :root {
+    --header-height: 98px;
+  }
+}
+
+@media (min-width: 1025px) {
+  :root {
+    --header-height: 106px;
+  }
 }
 
 @theme inline {
-  --color-primary: #80BDDF;
-  --color-secondary: #FF88C2;
-  --color-black: #18181B;
+  --color-primary: #80bddf;
+  --color-secondary: #ff88c2;
+  --color-black: #18181b;
   --color-overlay: rgba(24, 24, 27, 0.7);
   --color-white: #ffffff;
 
@@ -31,7 +47,10 @@
   --text-22: 22px;
   --text-28: 28px;
   --text-30: 30px;
+  --text-42: 42px;
   --text-48: 48px;
+  --text-62: 62px;
+  --text-80: 80px;
 
   --font-weight-regular: 400;
   --font-weight-bold: 700;
@@ -41,7 +60,8 @@
   --radius-24: 24px;
   --radius-50: 50px;
 
-  --animate-radixAccordionSlideDown: radixAccordionSlideDown 300ms var(--animation-timing-smooth);
+  --animate-radixAccordionSlideDown: radixAccordionSlideDown 300ms
+    var(--animation-timing-smooth);
 
   @keyframes radixAccordionSlideDown {
     from {
@@ -53,7 +73,8 @@
     }
   }
 
-  --animate-radixAccordionSlideUp: radixAccordionSlideUp 300ms var(--animation-timing-smooth);
+  --animate-radixAccordionSlideUp: radixAccordionSlideUp 300ms
+    var(--animation-timing-smooth);
 
   @keyframes radixAccordionSlideUp {
     from {
@@ -65,7 +86,8 @@
     }
   }
 
-  --animate-radixDialogOverlayShow: radixDialogOverlayShow 150ms var(--animation-timing-smooth);
+  --animate-radixDialogOverlayShow: radixDialogOverlayShow 150ms
+    var(--animation-timing-smooth);
 
   @keyframes radixDialogOverlayShow {
     from {
@@ -77,7 +99,8 @@
     }
   }
 
-  --animate-radixDialogContentShow: radixDialogContentShow 150ms var(--animation-timing-smooth);
+  --animate-radixDialogContentShow: radixDialogContentShow 150ms
+    var(--animation-timing-smooth);
 
   @keyframes radixDialogContentShow {
     from {
@@ -104,6 +127,11 @@ p {
 
 html {
   scroll-behavior: smooth;
+  /* The header is sticky, so an anchor target scrolled flush to the top of the
+     viewport ends up underneath it. Offsetting every scroll-into-view by the
+     header height (plus a little breathing room) keeps section headings
+     visible. */
+  scroll-padding-top: calc(var(--header-height) + 20px);
 }
 
 body {
@@ -113,17 +141,20 @@ body {
     "main"
     "footer";
   grid-template-rows: auto 1fr auto;
-  height: 100dvh;
+  /* min-height rather than height: a fixed 100dvh caps the sticky header's
+     containing block, so it would stop sticking after one viewport of
+     scrolling. This still pushes the footer down on short pages. */
+  min-height: 100dvh;
 }
 
-body>header {
-  grid-area: header
+body > header {
+  grid-area: header;
 }
 
-body>main {
-  grid-area: main
+body > main {
+  grid-area: main;
 }
 
-body>footer {
-  grid-area: footer
+body > footer {
+  grid-area: footer;
 }

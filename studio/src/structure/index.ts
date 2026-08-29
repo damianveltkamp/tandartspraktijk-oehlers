@@ -1,5 +1,6 @@
 import {CogIcon} from '@sanity/icons/Cog'
 import {DocumentIcon} from '@sanity/icons/Document'
+import {DocumentTextIcon} from '@sanity/icons/DocumentText'
 import type {StructureBuilder, StructureResolver} from 'sanity/structure'
 import pluralize from 'pluralize-esm'
 
@@ -14,6 +15,9 @@ const DISABLED_TYPES = [
   'homePage',
   'enrollPage',
   'notification',
+  // Listed explicitly further down so the Dutch plural reads correctly --
+  // `pluralize-esm` only knows English.
+  'legalPage',
 ]
 
 export const structure: StructureResolver = (S: StructureBuilder) =>
@@ -36,6 +40,10 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
         .title('Inschrijfpagina')
         .child(S.document().schemaType('enrollPage').documentId('enrollPage'))
         .icon(DocumentIcon),
+      S.listItem()
+        .title("Juridische pagina's")
+        .child(S.documentTypeList('legalPage').title("Juridische pagina's"))
+        .icon(DocumentTextIcon),
       S.listItem()
         .title('Notification')
         .child(S.document().schemaType('notification').documentId('notification'))

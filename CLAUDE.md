@@ -42,9 +42,11 @@ Types are generated, not hand-written, and both workspaces depend on them:
 2. `frontend`/`studio`: `sanity typegen generate` → `sanity.types.ts` (reads the `typegen` key in
    each workspace's `sanity.cli.ts`; the standalone `sanity-typegen.json` file is deprecated)
 
-`frontend`'s `predev`/`prebuild` run `typegen` automatically, but they only re-read
-`studio/schema.json` — **after editing any Studio schema you must run `npm run sanity-types` from
-the root**, otherwise frontend types silently lag behind the schema. GROQ queries wrapped in
+`frontend`'s `predev`/`prebuild` run `typegen` automatically (`prebuild` also runs
+`scripts/check-legal-pages.ts`, which fails the build when a slug the footer hard-links to has no
+`legalPage` document), but they only re-read `studio/schema.json` — **after editing any Studio
+schema you must run `npm run sanity-types` from the root**, otherwise frontend types silently lag
+behind the schema. GROQ queries wrapped in
 `defineQuery` get typed result aliases, and `overloadClientMethods: true` means the client returns
 those types directly.
 
@@ -91,8 +93,9 @@ GROQ query (sanity/lib/queries.ts)
 `sanity/lib/client.ts` has stega enabled, so fetched strings may carry encoded metadata — use
 `stega: false` for values fed into metadata/`generateMetadata` (see `app/layout.tsx`).
 
-Note the Studio's `presentationTool` `resolve` config still references template document types
-(`page`, `post`) that don't exist in this project's schema — the real types are the singletons.
+The Studio's `presentationTool` `resolve` config maps `/` to `settings`, `/inschrijven` to the
+`enrollPage` singleton and the catch-all `/:slug` to `legalPage` (matched last, so a named route
+wins). Add a route there whenever you add one to `app/`, or Presentation shows "no document found".
 
 ## Styling
 

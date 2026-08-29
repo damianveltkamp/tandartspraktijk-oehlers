@@ -34,9 +34,7 @@ const homeLocation = {
 // path for different document types and used in the presentation tool.
 function resolveHref(documentType?: string, slug?: string): string | undefined {
   switch (documentType) {
-    case 'post':
-      return slug ? `/posts/${slug}` : undefined
-    case 'page':
+    case 'legalPage':
       return slug ? `/${slug}` : undefined
     default:
       console.warn('Invalid document type:', documentType)
@@ -69,12 +67,14 @@ export default defineConfig({
             filter: `_type == "settings" && _id == "siteSettings"`,
           },
           {
-            route: '/:slug',
-            filter: `_type == "page" && slug.current == $slug || _id == $slug`,
+            route: '/inschrijven',
+            filter: `_type == "enrollPage" && _id == "enrollPage"`,
           },
+          // Matched last: `/:slug` is the frontend's catch-all legal-page
+          // route, so anything the routes above did not claim is a legalPage.
           {
-            route: '/posts/:slug',
-            filter: `_type == "post" && slug.current == $slug || _id == $slug`,
+            route: '/:slug',
+            filter: `_type == "legalPage" && slug.current == $slug || _id == $slug`,
           },
         ]),
         // Locations Resolver API allows you to define where data is being used in your application. https://www.sanity.io/docs/presentation-resolver-api#8d8bca7bfcd7
@@ -84,37 +84,28 @@ export default defineConfig({
             message: 'This document is used on all pages',
             tone: 'positive',
           }),
-          page: defineLocations({
-            select: {
-              name: 'name',
-              slug: 'slug.current',
-            },
-            resolve: (doc) => ({
-              locations: [
-                {
-                  title: doc?.name || 'Untitled',
-                  href: resolveHref('page', doc?.slug)!,
-                },
-              ],
-            }),
-          }),
-          post: defineLocations({
+          legalPage: defineLocations({
             select: {
               title: 'title',
               slug: 'slug.current',
             },
-            resolve: (doc) => ({
-              locations: [
-                {
-                  title: doc?.title || 'Untitled',
-                  href: resolveHref('post', doc?.slug)!,
-                },
-                {
-                  title: 'Home',
-                  href: '/',
-                } satisfies DocumentLocation,
-              ].filter(Boolean) as DocumentLocation[],
-            }),
+            resolve: (doc) => {
+              const href = resolveHref('legalPage', doc?.slug)
+
+              // A draft without a slug yet has nowhere to point at, and an
+              // entry with an empty href renders as a dead link in the
+              // "Used on" panel.
+              if (!href) return {locations: []}
+
+              return {
+                locations: [
+                  {
+                    title: doc?.title || 'Zonder titel',
+                    href,
+                  } satisfies DocumentLocation,
+                ],
+              }
+            },
           }),
         },
       },

@@ -76,8 +76,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
                   field={field}
                   errorMessage={
                     errors[INPUTKEYS.personaliaGender]?.message as
-                      | string
-                      | undefined
+                      string | undefined
                   }
                 />
               )}
@@ -94,8 +93,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
             )}
             errorMessage={
               errors[INPUTKEYS.personaliaFirstName]?.message as
-                | string
-                | undefined
+                string | undefined
             }
             autoComplete={FORM_AUTOCOMPLETE.personaliaFirstname}
           />
@@ -120,8 +118,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
             )}
             errorMessage={
               errors[INPUTKEYS.personaliaLastname]?.message as
-                | string
-                | undefined
+                string | undefined
             }
             autoComplete={FORM_AUTOCOMPLETE.personaliaLastname}
           />
@@ -138,8 +135,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
             )}
             errorMessage={
               errors[INPUTKEYS.personaliaDateOfBirth]?.message as
-                | string
-                | undefined
+                string | undefined
             }
             autoComplete={FORM_AUTOCOMPLETE.personaliaDateOfBirth}
           />
@@ -275,8 +271,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
               )}
               errorMessage={
                 errors[INPUTKEYS.addressHouseNumber]?.message as
-                  | string
-                  | undefined
+                  string | undefined
               }
             />
           </div>
@@ -292,8 +287,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
               )}
               errorMessage={
                 errors[INPUTKEYS.addressPostalCode]?.message as
-                  | string
-                  | undefined
+                  string | undefined
               }
               autoComplete={FORM_AUTOCOMPLETE.addressPostalCode}
             />
@@ -308,8 +302,7 @@ export const PersonalInformation = <TFormValues extends FieldValues>({
               )}
               errorMessage={
                 errors[INPUTKEYS.addressPlaceName]?.message as
-                  | string
-                  | undefined
+                  string | undefined
               }
               autoComplete={FORM_AUTOCOMPLETE.addressPlaceName}
             />

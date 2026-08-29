@@ -21,22 +21,22 @@
     "dev": "npm-run-all --parallel --print-label dev:*",
     "dev:next": "npm run dev --workspace=frontend",
     "dev:studio": "npm run dev --workspace=studio",
-    "sanity-types": "npm run schema-extract && npm run generate-studio-types && npm run generate-frontend-types",
-    "generate-studio-types": "npm run typegen --workspace=studio",
-    "generate-frontend-types": "npm run typegen --workspace=frontend",
-    "schema-extract": "npm run extract-types --workspace=studio",
     "format": "prettier --cache --write .",
+    "generate-frontend-types": "npm run typegen --workspace=frontend",
+    "generate-studio-types": "npm run typegen --workspace=studio",
     "import-sample-data": "cd studio && sanity dataset import sample-data.tar.gz --replace",
     "lint": "npm run lint --workspace=frontend",
+    "sanity-types": "npm run schema-extract && npm run generate-studio-types && npm run generate-frontend-types",
+    "schema-extract": "npm run extract-types --workspace=studio",
     "type-check": "npm run type-check --workspaces"
   },
   "prettier": "@sanity/prettier-config",
+  "overrides": {
+    "@sanity/sdk-react": "2.19.0"
+  },
   "devDependencies": {
     "@sanity/prettier-config": "^2.0.1",
     "npm-run-all2": "^5.0.2",
     "prettier": "^3.6.2"
-  },
-  "overrides": {
-    "@sanity/sdk-react": "2.19.0"
   }
 }

@@ -13,9 +13,9 @@
     "deploy": "sanity deploy",
     "dev": "sanity dev",
     "extract-types": "sanity schema extract --enforce-required-fields --force",
-    "typegen": "sanity typegen generate",
     "start": "sanity start",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "typegen": "sanity typegen generate"
   },
   "dependencies": {
     "@sanity/assist": "^6.1.21",

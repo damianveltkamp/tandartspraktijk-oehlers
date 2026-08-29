@@ -3,7 +3,8 @@
   "name": "frontend",
   "private": true,
   "scripts": {
-    "prebuild": "npm run typegen",
+    "check-legal-pages": "tsx scripts/check-legal-pages.ts",
+    "prebuild": "npm run typegen && npm run check-legal-pages",
     "build": "next build",
     "predev": "npm run typegen",
     "dev": "next dev --turbopack",
@@ -60,6 +61,7 @@
     "prettier-plugin-tailwindcss": "^0.6.13",
     "schema-dts": "^1.1.5",
     "tailwindcss": "^4",
+    "tsx": "^4.23.12",
     "typescript": "^5",
     "typescript-eslint": "^8.34.1"
   },

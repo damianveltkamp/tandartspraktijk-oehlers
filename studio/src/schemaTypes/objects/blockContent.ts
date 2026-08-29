@@ -45,7 +45,15 @@ export const blockContent = defineType({
                 type: 'string',
                 description:
                   'Een volledige URL (https://...), een pad op deze website (/inschrijven), een e-mailadres (mailto:...) of een telefoonnummer (tel:...).',
-                validation: (Rule) => Rule.required(),
+                // `allowRelative` keeps `/inschrijven` valid; the scheme
+                // list rejects a bare `www.example.com`, which the renderer
+                // would otherwise treat as external and emit as-is, making
+                // the browser resolve it relative to the current page.
+                validation: (Rule) =>
+                  Rule.required().uri({
+                    scheme: ['http', 'https', 'mailto', 'tel'],
+                    allowRelative: true,
+                  }),
               },
             ],
           }),

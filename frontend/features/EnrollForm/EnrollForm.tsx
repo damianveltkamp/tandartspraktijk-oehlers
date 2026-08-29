@@ -246,11 +246,15 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
                         className="hocus:no-underline font-bold underline"
                       >
                         algemene voorwaarden
+                        {/* Inside the link on purpose: as a sibling this text
+                            is not part of the link's accessible name, so a
+                            screen reader announces the link without the
+                            new-tab warning. */}
+                        <span className="sr-only">
+                          {" "}
+                          (opent in een nieuw tabblad)
+                        </span>
                       </Link>
-                      <span className="sr-only">
-                        {" "}
-                        (opent in een nieuw tabblad)
-                      </span>
                     </>
                   ),
                 },

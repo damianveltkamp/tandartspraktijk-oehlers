@@ -20,3 +20,7 @@ npx sanity documents create seed/algemene-voorwaarden.json --replace
 
 `--replace` makes the command idempotent. Use `--missing` instead if you would
 rather leave copy someone has already edited untouched.
+
+Forgetting this step is caught rather than shipped: the frontend's `prebuild`
+runs `scripts/check-legal-pages.ts`, which fails the build when either slug is
+missing from the dataset it is building against.

@@ -53,12 +53,14 @@ export async function generateMetadata(): Promise<Metadata> {
       ],
       apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
     },
+    // No `title`/`description` here: Next only backfills `openGraph.title` and
+    // `openGraph.description` from a page's own `title`/`description` when they
+    // are absent, so setting them at the root would pin every page's social card
+    // to the site-wide copy.
     openGraph: {
       type: "website",
       locale: "nl_NL",
       siteName: title,
-      title,
-      description,
       images: ogImage ? [ogImage] : [],
     },
   };

@@ -16,6 +16,8 @@ import {
   INPUTKEYS,
 } from "./constants";
 import { Button, LinkButton } from "@/components/Button/Button";
+import { Link } from "@/components/Link/Link";
+import { LEGAL_PAGES } from "@/constants/legal";
 import { AddFamilyMemberDialog } from "./components/AddFamilyMemberDialog/AddFamilyMemberDialog";
 import { PersonalInformation } from "./components/PersonalInformation/PersonalInformation";
 import { getCountryOptions } from "@/utils/getCountryCodes";
@@ -230,7 +232,27 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
               items={[
                 {
                   value: "comply",
-                  label: "Ik ga akkoord met de algemene voorwaarden",
+                  label: (
+                    <>
+                      Ik ga akkoord met de{" "}
+                      {/* Opens in a new tab on purpose: the form keeps all of
+                          its state client-side, so navigating away and back
+                          would discard everything already filled in. */}
+                      <Link
+                        isExternal={false}
+                        href={LEGAL_PAGES.terms.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hocus:no-underline font-bold underline"
+                      >
+                        algemene voorwaarden
+                      </Link>
+                      <span className="sr-only">
+                        {" "}
+                        (opent in een nieuw tabblad)
+                      </span>
+                    </>
+                  ),
                 },
               ]}
               inputKey={INPUTKEYS.termsAndConditions}

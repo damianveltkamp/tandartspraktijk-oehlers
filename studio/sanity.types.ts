@@ -147,6 +147,25 @@ export type Contact = {
   >
 }
 
+export type BlockContent = Array<{
+  children?: Array<{
+    marks?: Array<string>
+    text?: string
+    _type: 'span'
+    _key: string
+  }>
+  style?: 'normal' | 'h2' | 'h3'
+  listItem?: 'bullet' | 'number'
+  markDefs?: Array<{
+    href: string
+    _type: 'blockLink'
+    _key: string
+  }>
+  level?: number
+  _type: 'block'
+  _key: string
+}>
+
 export type AccordionItem = {
   _type: 'accordionItem'
   heading: string
@@ -161,6 +180,24 @@ export type Accordion = {
       _key: string
     } & AccordionItem
   >
+}
+
+export type LegalPage = {
+  _id: string
+  _type: 'legalPage'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  slug: Slug
+  seoDescription: string
+  body: BlockContent
+}
+
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
 }
 
 export type EnrollPage = {
@@ -463,12 +500,6 @@ export type Geopoint = {
   alt?: number
 }
 
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
-}
-
 export type AllSanitySchemaTypes =
   | SanityFileAssetReference
   | VideoHero
@@ -484,8 +515,11 @@ export type AllSanitySchemaTypes =
   | CustomImage
   | ContactDetail
   | Contact
+  | BlockContent
   | AccordionItem
   | Accordion
+  | LegalPage
+  | Slug
   | EnrollPage
   | HomePage
   | SanityImageCrop
@@ -513,4 +547,3 @@ export type AllSanitySchemaTypes =
   | SanityAssetSourceData
   | SanityImageAsset
   | Geopoint
-  | Slug

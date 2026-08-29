@@ -1,8 +1,13 @@
+import type { ReactNode } from "react";
 import type { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 import * as RadixRadioGroup from "@radix-ui/react-radio-group";
 
 interface InputItemProps {
-  label: string;
+  /**
+   * `ReactNode` rather than `string` so a label can carry a link -- the
+   * enrollment form's terms checkbox has to link to the algemene voorwaarden.
+   */
+  label: ReactNode;
   value: string;
 }
 

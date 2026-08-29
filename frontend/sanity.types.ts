@@ -147,6 +147,25 @@ export type Contact = {
   >;
 };
 
+export type BlockContent = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal" | "h2" | "h3";
+  listItem?: "bullet" | "number";
+  markDefs?: Array<{
+    href: string;
+    _type: "blockLink";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
+
 export type AccordionItem = {
   _type: "accordionItem";
   heading: string;
@@ -161,6 +180,24 @@ export type Accordion = {
       _key: string;
     } & AccordionItem
   >;
+};
+
+export type LegalPage = {
+  _id: string;
+  _type: "legalPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  seoDescription: string;
+  body: BlockContent;
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
 };
 
 export type EnrollPage = {
@@ -463,12 +500,6 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
 export type AllSanitySchemaTypes =
   | SanityFileAssetReference
   | VideoHero
@@ -484,8 +515,11 @@ export type AllSanitySchemaTypes =
   | CustomImage
   | ContactDetail
   | Contact
+  | BlockContent
   | AccordionItem
   | Accordion
+  | LegalPage
+  | Slug
   | EnrollPage
   | HomePage
   | SanityImageCrop
@@ -512,8 +546,7 @@ export type AllSanitySchemaTypes =
   | SanityFileAsset
   | SanityAssetSourceData
   | SanityImageAsset
-  | Geopoint
-  | Slug;
+  | Geopoint;
 
 // Source: sanity/lib/queries.ts
 // Variable: settingsQuery
@@ -595,9 +628,24 @@ export type GetNotificationQueryResult = {
 } | null;
 
 // Source: sanity/lib/queries.ts
-// Variable: sitemapData
-// Query: *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {    "slug": slug.current,    _type,    _updatedAt,  }
-export type SitemapDataResult = Array<never>;
+// Variable: getLegalPageQuery
+// Query: *[_type == 'legalPage' && slug.current == $slug][0]{    _id,    _type,    title,    "slug": slug.current,    seoDescription,    body,  }
+export type GetLegalPageQueryResult = {
+  _id: string;
+  _type: "legalPage";
+  title: string;
+  slug: string;
+  seoDescription: string;
+  body: BlockContent;
+} | null;
+
+// Source: sanity/lib/queries.ts
+// Variable: getLegalPageSlugsQuery
+// Query: *[_type == 'legalPage' && defined(slug.current)] | order(slug.current asc) {    "slug": slug.current,    _updatedAt,  }
+export type GetLegalPageSlugsQueryResult = Array<{
+  slug: string;
+  _updatedAt: string;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -608,6 +656,7 @@ declare module "@sanity/client" {
     "\n  *[_type == 'homePage'][0]{\n    _id,\n    _type,\n    name,\n    hero{\n      ...,\n      video{asset->{url}},\n    },\n    faq,\n    services,\n    contact,\n    image,\n    emergencyService,\n    team,\n    treatments,\n  }\n": GetHomepageQueryResult;
     "\n  *[_type == 'enrollPage'][0]{\n    _id,\n    _type,\n    name,\n    showEnrollmentPage,\n    enrollmentUnavailableText,\n    hero,\n  }\n": GetEnrollmentPageQueryResult;
     "\n  *[_type == 'notification'][0]{\n    _id,\n    _type,\n    heading,\n    description,\n    showNotification,\n  }\n": GetNotificationQueryResult;
-    '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult;
+    "\n  *[_type == 'legalPage' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    seoDescription,\n    body,\n  }\n": GetLegalPageQueryResult;
+    "\n  *[_type == 'legalPage' && defined(slug.current)] | order(slug.current asc) {\n    \"slug\": slug.current,\n    _updatedAt,\n  }\n": GetLegalPageSlugsQueryResult;
   }
 }

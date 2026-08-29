@@ -1,0 +1,110 @@
+{
+  "_id": "legalPage-algemene-voorwaarden",
+  "_type": "legalPage",
+  "title": "Algemene voorwaarden",
+  "slug": {
+    "_type": "slug",
+    "current": "algemene-voorwaarden"
+  },
+  "seoDescription": "De algemene voorwaarden van Tandartspraktijk Oehlers: inschrijving, afspraken afzeggen, tarieven en betaling.",
+  "body": [
+    {
+      "_type": "block",
+      "_key": "seed0019",
+      "style": "normal",
+      "markDefs": [],
+      "children": [
+        {
+          "_type": "span",
+          "_key": "seed0020",
+          "text": "Deze tekst is een tijdelijke placeholder. De praktijk vult de definitieve algemene voorwaarden aan via de Studio.",
+          "marks": []
+        }
+      ]
+    },
+    {
+      "_type": "block",
+      "_key": "seed0021",
+      "style": "h2",
+      "markDefs": [],
+      "children": [
+        {
+          "_type": "span",
+          "_key": "seed0022",
+          "text": "Inschrijving",
+          "marks": []
+        }
+      ]
+    },
+    {
+      "_type": "block",
+      "_key": "seed0023",
+      "style": "normal",
+      "markDefs": [],
+      "children": [
+        {
+          "_type": "span",
+          "_key": "seed0024",
+          "text": "Een inschrijving via het formulier op deze website is een aanvraag. De praktijk bevestigt uw inschrijving per e-mail of telefonisch.",
+          "marks": []
+        }
+      ]
+    },
+    {
+      "_type": "block",
+      "_key": "seed0025",
+      "style": "h2",
+      "markDefs": [],
+      "children": [
+        {
+          "_type": "span",
+          "_key": "seed0026",
+          "text": "Afspraken afzeggen",
+          "marks": []
+        }
+      ]
+    },
+    {
+      "_type": "block",
+      "_key": "seed0027",
+      "style": "normal",
+      "markDefs": [],
+      "children": [
+        {
+          "_type": "span",
+          "_key": "seed0028",
+          "text": "Afspraken dienen minimaal 24 uur vooraf te worden afgezegd. Bij een te late afzegging kan de gereserveerde tijd in rekening worden gebracht.",
+          "marks": []
+        }
+      ]
+    },
+    {
+      "_type": "block",
+      "_key": "seed0029",
+      "style": "h2",
+      "markDefs": [],
+      "children": [
+        {
+          "_type": "span",
+          "_key": "seed0030",
+          "text": "Tarieven en betaling",
+          "marks": []
+        }
+      ]
+    },
+    {
+      "_type": "block",
+      "_key": "seed0031",
+      "style": "normal",
+      "markDefs": [],
+      "children": [
+        {
+          "_type": "span",
+          "_key": "seed0032",
+          "text": "De praktijk hanteert de tarieven die jaarlijks door de Nederlandse Zorgautoriteit worden vastgesteld.",
+          "marks": []
+        }
+      ]
+    }
+  ]
+}

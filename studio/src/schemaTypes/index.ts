@@ -2,6 +2,8 @@ import {homePage} from './singletons/homePage'
 import {enrollPage} from './singletons/enrollpage'
 import {settings} from './singletons/settings'
 import {notification} from './singletons/notification'
+import {legalPage} from './documents/legalPage'
+import {blockContent} from './objects/blockContent'
 import {hero} from './objects/hero'
 import {team} from './objects/team'
 import {services} from './objects/services'
@@ -19,9 +21,12 @@ import {videoHero} from './objects/videoHero'
 
 const singletons = [settings, notification, homePage, enrollPage]
 
+const documents = [legalPage]
+
 const objects = [
   accordion,
   accordionItem,
+  blockContent,
   contact,
   contactDetail,
   customImage,
@@ -36,4 +41,4 @@ const objects = [
   videoHero,
 ]
 
-export const schemaTypes = [...singletons, ...objects]
+export const schemaTypes = [...singletons, ...documents, ...objects]

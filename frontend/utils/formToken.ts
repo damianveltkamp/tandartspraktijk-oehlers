@@ -4,16 +4,18 @@ import { createHmac, timingSafeEqual } from "node:crypto";
  * A short-lived, HMAC-signed stamp handed to the enrollment form when it
  * mounts and handed back when it submits.
  *
- * It buys two things the enrollment server action cannot get any other way:
+ * What it buys is a trustworthy clock: a form completed in under
+ * `MIN_FORM_AGE_MS` was not filled in by a human reading it, and the stamp is
+ * signed rather than merely sent along because an unsigned timestamp is a
+ * number the caller picks.
  *
- * 1. Proof the submitter actually loaded the page. `sendEnrollmentEmail` is a
- *    public server action -- anything that can POST to it triggers an email to
- *    the practice. A caller that never rendered the form has no valid token.
- * 2. A trustworthy render time. A form completed in under `MIN_FORM_AGE_MS` was
- *    not filled in by a human reading it.
- *
- * The stamp is signed rather than merely sent along because the client is not
- * trusted: an unsigned timestamp is a number the caller picks.
+ * What it does NOT buy, despite the temptation to claim otherwise: proof that
+ * the submitter loaded the page. `issueFormToken` is itself an unauthenticated
+ * server action whose id is discoverable in the client bundle, so a bot can
+ * mint a token directly, wait, and submit. Nor is a token single-use -- there
+ * is no nonce, so one mint is replayable for the whole hour. This raises the
+ * cost of abuse; it does not prevent it. The rate limit that would is issue
+ * #10, deliberately left unbuilt.
  */
 
 const SEPARATOR = ".";

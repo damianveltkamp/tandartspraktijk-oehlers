@@ -64,7 +64,9 @@ export async function sendEnrollmentEmail(
     };
   }
 
-  if (parsedGuard.data.honeypot !== "") {
+  // Trimmed: a stray space is not a bot, and refusing one would be a rejection
+  // the visitor can neither see nor explain.
+  if (parsedGuard.data.honeypot.trim() !== "") {
     logRejection("honeypot");
 
     return {

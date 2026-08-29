@@ -62,20 +62,53 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
    * forbids.
    */
   const [formToken, setFormToken] = useState("");
+  /**
+   * Bumped to mint a replacement token.
+   *
+   * A token is only good for an hour, and this form is long enough that a
+   * visitor can be interrupted for longer than that. Without a re-mint the
+   * expiry would be a deadline on the *page* rather than on the attempt: every
+   * retry would resend the same stale token and be refused identically, and the
+   * message would tell them to try again shortly -- advice that could never
+   * work. The same trap catches a token that never arrived, and a signature
+   * refused because the secret was rotated while the page was open.
+   */
+  const [tokenAttempt, setTokenAttempt] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
+    let retriesLeft = 3;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
 
-    void issueFormToken().then((token) => {
-      if (isMounted) {
-        setFormToken(token);
-      }
-    });
+    const mint = () => {
+      issueFormToken().then(
+        (token) => {
+          if (isMounted) {
+            setFormToken(token);
+          }
+        },
+        () => {
+          // Swallowed rather than surfaced: the visitor is still filling in the
+          // form and there is nothing for them to do about it yet. Retried with
+          // a widening gap so a blip does not leave the form permanently
+          // unsubmittable, and reported honestly at submit time if it never
+          // succeeds.
+          retriesLeft -= 1;
+
+          if (isMounted && retriesLeft > 0) {
+            retryTimer = setTimeout(mint, (4 - retriesLeft) * 2_000);
+          }
+        },
+      );
+    };
+
+    mint();
 
     return () => {
       isMounted = false;
+      clearTimeout(retryTimer);
     };
-  }, []);
+  }, [tokenAttempt]);
 
   const {
     register,
@@ -128,6 +161,21 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
         setSuccessfullySubmitted(true);
       } else if (result.reason === "rejected") {
         setRejectionMessage(result.message);
+
+        // Give the next attempt a fresh token and an empty decoy, so "probeer
+        // het over een paar minuten opnieuw" is advice that can actually work.
+        // A refusal the visitor cannot recover from is worse than a bot getting
+        // a second try -- and a bot posting to the action directly never sees
+        // either reset, since both live in this component.
+        setTokenAttempt((attempt) => attempt + 1);
+
+        if (form instanceof HTMLFormElement) {
+          const decoy = form.elements.namedItem(HONEYPOT_FIELD_NAME);
+
+          if (decoy instanceof HTMLInputElement) {
+            decoy.value = "";
+          }
+        }
       } else {
         setErrorWhileSubmitting(true);
       }

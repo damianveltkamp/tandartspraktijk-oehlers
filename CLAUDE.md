@@ -89,8 +89,12 @@ GROQ query (sanity/lib/queries.ts)
   an hour. All four refusal modes return the same Dutch message so a bot learns nothing, and the
   real reason goes to the log under `[enroll-abuse]`. A refusal returns `reason: "rejected"` and is
   rendered inline so the visitor keeps their form; only `reason: "failed"` replaces it. The token is
-  minted on mount rather than during render because `/inschrijven` is statically prerendered.
-  Note this is *not* a rate limit — see issue #10 for what is deliberately not covered.
+  minted on mount rather than during render because `/inschrijven` is statically prerendered, and
+  re-minted after any refusal — otherwise the one-hour expiry would be a deadline on the page rather
+  than on the attempt, and a retry would resend the same stale token forever.
+  What this does **not** do: prove the submitter loaded the page (`issueFormToken` is itself a public
+  server action a bot can call), make a token single-use (no nonce — one mint is replayable for the
+  hour), or rate limit anything. See issue #10 for the gap.
 
 ### Visual editing / draft mode
 

@@ -5,6 +5,15 @@ import { Link } from "@/components/Link/Link";
 import type { PortableTextProps } from "./PortableText.types";
 
 /**
+ * External means "has a scheme" -- `https:`, `mailto:`, `tel:`. Testing for a
+ * leading `/` instead would classify a scheme-less `www.example.com` as
+ * external and emit it unchanged, which the browser then resolves relative to
+ * the current page. The schema rejects that shape; this keeps the renderer
+ * from depending on it having done so.
+ */
+const isExternalHref = (href: string) => /^[a-z][a-z0-9+.-]*:/i.test(href);
+
+/**
  * Renders Sanity rich text using the site's own typography utilities.
  *
  * The `blockContent` schema is deliberately narrow, so this covers all of it:
@@ -13,8 +22,6 @@ import type { PortableTextProps } from "./PortableText.types";
  * schema without one, `@portabletext/react` falls back to an unstyled element
  * rather than throwing, which is easy to miss. Keep the two in step.
  */
-const isExternalHref = (href: string) => !href.startsWith("/");
-
 const components: PortableTextComponents = {
   block: {
     h2: ({ children }) => (

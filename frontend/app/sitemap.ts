@@ -13,8 +13,12 @@ export const revalidate = 3600;
 
 /**
  * The static routes below are what matters for indexing, and this file is
- * prerendered during the build -- so a Sanity outage or a missing read token
- * must degrade the sitemap rather than fail the whole build.
+ * prerendered during the build -- so a failing Sanity query must degrade the
+ * sitemap rather than fail the whole build.
+ *
+ * Note the limit: this only covers the request. Missing configuration is not
+ * caught here, because `sanity/lib/api` and `sanity/lib/token` throw while the
+ * module graph is still evaluating, before anything below runs.
  */
 async function fetchLegalPageSlugs() {
   try {

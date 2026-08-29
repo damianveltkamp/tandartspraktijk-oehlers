@@ -1,5 +1,15 @@
 import {DocumentTextIcon} from '@sanity/icons/DocumentText'
 import {defineField, defineType} from 'sanity'
+import type {SlugValue} from 'sanity'
+
+/**
+ * Must stay in step with `SLUG_PATTERN` in `frontend/app/[slug]/page.tsx`, which
+ * rejects anything else before it queries. Without this, a slug typed by hand --
+ * `Cookiebeleid`, `cookie_beleid`, `privacy-2.0` -- publishes happily, is
+ * advertised by the sitemap and gets a Presentation "Used on" link, and then
+ * 404s. `slugify` only covers the value generated from the title.
+ */
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 /**
  * A juridische pagina -- privacyverklaring, algemene voorwaarden, and whatever
@@ -33,7 +43,19 @@ export const legalPage = defineType({
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule) => Rule.required(),
+      // `Rule.custom` rather than `Rule.regex`: a slug field's value is the
+      // object `{_type, current}`, so the string validators never see the URL.
+      validation: (Rule) =>
+        Rule.required().custom((value: SlugValue | undefined) => {
+          const current = value?.current
+
+          if (!current) return true
+
+          return (
+            SLUG_PATTERN.test(current) ||
+            'Gebruik alleen kleine letters, cijfers en losse koppeltekens, bijvoorbeeld "algemene-voorwaarden".'
+          )
+        }),
     }),
     defineField({
       name: 'seoDescription',

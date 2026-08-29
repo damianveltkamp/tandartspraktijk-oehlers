@@ -264,6 +264,14 @@ export type Settings = {
   _rev: string;
   title: string;
   description: string;
+  ogImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
 };
 
 export type SanityAssistInstructionTask = {
@@ -559,6 +567,14 @@ export type SettingsQueryResult = {
   _rev: string;
   title: string;
   description: string;
+  ogImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
 } | null;
 
 // Source: sanity/lib/queries.ts

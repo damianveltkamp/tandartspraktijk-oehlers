@@ -13,7 +13,8 @@ import {
   getNotificationQuery,
   settingsQuery,
 } from "@/sanity/lib/queries";
-// import { resolveOpenGraphImage } from "@/sanity/lib/utils";
+import { resolveOpenGraphImage } from "@/sanity/lib/utils";
+import { getBaseUrl } from "@/utils/getBaseUrl";
 import { handleError } from "./client-utils";
 import { Header } from "@/features/Header/Header";
 import { Footer } from "@/features/Footer/Footer";
@@ -29,27 +30,39 @@ export async function generateMetadata(): Promise<Metadata> {
   });
   const title = settings?.title ?? "";
   const description = settings?.description ?? "";
+  const ogImage = resolveOpenGraphImage(settings?.ogImage);
 
-  // const ogImage = resolveOpenGraphImage(settings?.ogImage);
-  // let metadataBase: undefined | URL = undefined;
-  // try {
-  //   metadataBase = settings?.ogImage?.metadataBase
-  //     ? new URL(settings.ogImage.metadataBase)
-  //     : undefined;
-  // } catch {
-  //   // ignore
-  // }
+  // Without a metadataBase Next resolves every OG/Twitter image to a relative
+  // URL, which the social crawlers cannot fetch. `getBaseUrl` returns undefined
+  // for an unset or unparseable variable, so a bad value only costs us the
+  // absolute URLs instead of throwing out of `generateMetadata`.
+  const baseUrl = getBaseUrl();
 
   return {
-    // metadataBase,
+    metadataBase: baseUrl ? new URL(baseUrl) : undefined,
     title: {
       template: `%s | ${title}`,
       default: title,
     },
     description: description,
-    // openGraph: {
-    //   images: ogImage ? [ogImage] : [],
-    // },
+    manifest: "/site.webmanifest",
+    icons: {
+      icon: [
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      ],
+      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    },
+    // No `title`/`description` here: Next only backfills `openGraph.title` and
+    // `openGraph.description` from a page's own `title`/`description` when they
+    // are absent, so setting them at the root would pin every page's social card
+    // to the site-wide copy.
+    openGraph: {
+      type: "website",
+      locale: "nl_NL",
+      siteName: title,
+      images: ogImage ? [ogImage] : [],
+    },
   };
 }
 
@@ -110,7 +123,7 @@ export default async function RootLayout({
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
-    <html lang="en">
+    <html lang="nl">
       <head>
         <script
           type="application/ld+json"

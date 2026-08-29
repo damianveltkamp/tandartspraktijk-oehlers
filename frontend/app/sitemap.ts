@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { client } from "@/sanity/lib/client";
 import { getLegalPageSlugsQuery } from "@/sanity/lib/queries";
+import { getBaseUrl } from "@/utils/getBaseUrl";
 
 /**
  * Legal pages are editor-created, so the set this file renders is not fixed at
@@ -34,7 +35,7 @@ async function fetchLegalPageSlugs() {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const domain: string = process.env.NEXT_PUBLIC_BASE_URL ?? "";
+  const domain = getBaseUrl() ?? "";
 
   const legalPages = await fetchLegalPageSlugs();
 

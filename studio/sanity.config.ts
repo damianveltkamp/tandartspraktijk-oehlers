@@ -24,28 +24,22 @@ const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
 // URL for preview functionality, defaults to localhost:3000 if not set
 const SANITY_STUDIO_PREVIEW_URL = process.env.SANITY_STUDIO_PREVIEW_URL || 'http://localhost:3000'
 
-// Define the home location for the presentation tool
+// The site's fixed routes. Every singleton is rendered on one of these, so
+// their locations are static -- only legalPage resolves a href from a slug.
 const homeLocation = {
-  title: 'Home',
+  title: 'Startpagina',
   href: '/',
 } satisfies DocumentLocation
 
-// resolveHref() is a convenience function that resolves the URL
-// path for different document types and used in the presentation tool.
-function resolveHref(documentType?: string, slug?: string): string | undefined {
-  switch (documentType) {
-    case 'legalPage':
-      return slug ? `/${slug}` : undefined
-    default:
-      console.warn('Invalid document type:', documentType)
-      return undefined
-  }
-}
+const enrollLocation = {
+  title: 'Inschrijven',
+  href: '/inschrijven',
+} satisfies DocumentLocation
 
 // Main Sanity configuration
 export default defineConfig({
   name: 'default',
-  title: 'Sanity + Next.js Starter Template',
+  title: 'Tandartspraktijk Oehlers',
 
   projectId,
   dataset,
@@ -79,9 +73,20 @@ export default defineConfig({
         ]),
         // Locations Resolver API allows you to define where data is being used in your application. https://www.sanity.io/docs/presentation-resolver-api#8d8bca7bfcd7
         locations: {
+          homePage: defineLocations({
+            locations: [homeLocation],
+          }),
+          enrollPage: defineLocations({
+            locations: [enrollLocation],
+          }),
           settings: defineLocations({
             locations: [homeLocation],
-            message: 'This document is used on all pages',
+            message: "Dit document wordt op alle pagina's gebruikt",
+            tone: 'positive',
+          }),
+          notification: defineLocations({
+            locations: [homeLocation],
+            message: "Dit document wordt op alle pagina's gebruikt",
             tone: 'positive',
           }),
           legalPage: defineLocations({
@@ -90,18 +95,16 @@ export default defineConfig({
               slug: 'slug.current',
             },
             resolve: (doc) => {
-              const href = resolveHref('legalPage', doc?.slug)
-
               // A draft without a slug yet has nowhere to point at, and an
               // entry with an empty href renders as a dead link in the
               // "Used on" panel.
-              if (!href) return {locations: []}
+              if (!doc?.slug) return {locations: []}
 
               return {
                 locations: [
                   {
-                    title: doc?.title || 'Zonder titel',
-                    href,
+                    title: doc.title || 'Zonder titel',
+                    href: `/${doc.slug}`,
                   } satisfies DocumentLocation,
                 ],
               }

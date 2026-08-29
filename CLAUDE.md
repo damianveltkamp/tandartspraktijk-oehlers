@@ -84,6 +84,19 @@ GROQ query (sanity/lib/queries.ts)
 - **Server actions** — `actions/sendEnrollmentEmail.ts` re-validates the enrollment payload with the
   same zod schema the client uses (`features/EnrollForm/validation.ts`) and sends HTML mail via
   Resend. `app/actions.ts` holds the draft-mode toggle.
+- **Enrollment anti-abuse** — `sendEnrollmentEmail` takes a second `guard` argument
+  (`features/EnrollForm/guard.ts`) alongside the patient payload: a honeypot field that must be
+  empty, and an HMAC-signed token minted by `actions/issueFormToken.ts` when the form mounts.
+  `utils/formToken.ts` verifies the signature and that the form was on screen between 3 seconds and
+  an hour. All four refusal modes return the same Dutch message so a bot learns nothing, and the
+  real reason goes to the log under `[enroll-abuse]`. A refusal returns `reason: "rejected"` and is
+  rendered inline so the visitor keeps their form; only `reason: "failed"` replaces it. The token is
+  minted on mount rather than during render because `/inschrijven` is statically prerendered, and
+  re-minted after any refusal — otherwise the one-hour expiry would be a deadline on the page rather
+  than on the attempt, and a retry would resend the same stale token forever.
+  What this does **not** do: prove the submitter loaded the page (`issueFormToken` is itself a public
+  server action a bot can call), make a token single-use (no nonce — one mint is replayable for the
+  hour), or rate limit anything. See issue #10 for the gap.
 
 ### Visual editing / draft mode
 
@@ -146,7 +159,9 @@ Sanity 6 requires Node `>=22.12`. Studio v6 also enables React strict mode in de
 `NEXT_PUBLIC_SANITY_DATASET`, `NEXT_PUBLIC_SANITY_API_VERSION`, `NEXT_PUBLIC_SANITY_STUDIO_URL`,
 `SANITY_API_READ_TOKEN` (required — `sanity/lib/token.ts` throws without it). The enrollment form
 additionally needs `RESEND_API_KEY`, `RESEND_FROM_EMAIL` and `RESEND_TO_EMAIL`
-(`actions/sendEnrollmentEmail.ts` throws without the latter two). `RESEND_TO_EMAIL` is
+(`actions/sendEnrollmentEmail.ts` throws without the latter two), plus `ENROLL_FORM_SECRET`
+(`utils/formToken.ts` throws without it, so the enrollment form is unusable until it is set —
+generate one with `openssl rand -hex 32`). `RESEND_TO_EMAIL` is
 comma-separated — the action splits/trims it into Resend's `to` array, so multiple practice
 mailboxes need no code change. And `app/sitemap.ts` reads
 `NEXT_PUBLIC_BASE_URL` — with no fallback, so the generated sitemap URLs are relative without it.

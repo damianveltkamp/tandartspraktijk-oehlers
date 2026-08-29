@@ -1,13 +1,91 @@
 "use server";
 
 import { format, parseISO } from "date-fns";
+import {
+  ENROLL_REJECTED_MESSAGE,
+  enrollGuardSchema,
+} from "@/features/EnrollForm/guard";
+import type { EnrollGuardValues } from "@/features/EnrollForm/guard";
 import { enrollValidationSchema } from "@/features/EnrollForm/validation";
 import type { EnrollFormValues } from "@/features/EnrollForm/validation";
+import type { FormTokenRejection } from "@/utils/formToken";
+import { verifyFormToken } from "@/utils/formToken";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendEnrollmentEmail(data: EnrollFormValues) {
+/**
+ * Records why a submission was refused.
+ *
+ * The caller gets one undifferentiated message, so the log is the only place
+ * the distinction survives -- and the distinction is the point. A burst of
+ * `honeypot` is a bot; a single `tooFast` is a real visitor who tabbed through
+ * a form their browser autofilled, and is worth loosening the limit for rather
+ * than celebrating as a catch.
+ */
+const logRejection = (reason: "honeypot" | FormTokenRejection) => {
+  console.warn("[enroll-abuse] submission rejected", {
+    reason,
+    at: new Date().toISOString(),
+  });
+};
+
+/**
+ * How a submission ended.
+ *
+ * `rejected` means a guard refused it and the visitor keeps their form;
+ * `failed` means the send itself broke and the form is gone. The client tells
+ * the two apart from this field rather than by matching on message text.
+ */
+export type EnrollResult =
+  | { message: string; reason: "failed" | "rejected"; success: false }
+  | { message: string; success: true };
+
+/**
+ * `guard` carries the anti-abuse fields. It is a separate argument rather than
+ * part of `data` so the enrollment payload keeps describing a patient and
+ * nothing else.
+ */
+export async function sendEnrollmentEmail(
+  data: EnrollFormValues,
+  guard: EnrollGuardValues,
+): Promise<EnrollResult> {
+  // Checked before anything else: a rejected submission must cost the practice
+  // no mail, and must not reach Resend at all.
+  const parsedGuard = enrollGuardSchema.safeParse(guard);
+
+  if (!parsedGuard.success) {
+    logRejection("malformed");
+
+    return {
+      success: false,
+      reason: "rejected",
+      message: ENROLL_REJECTED_MESSAGE,
+    };
+  }
+
+  if (parsedGuard.data.honeypot !== "") {
+    logRejection("honeypot");
+
+    return {
+      success: false,
+      reason: "rejected",
+      message: ENROLL_REJECTED_MESSAGE,
+    };
+  }
+
+  const tokenRejection = verifyFormToken(parsedGuard.data.token);
+
+  if (tokenRejection) {
+    logRejection(tokenRejection);
+
+    return {
+      success: false,
+      reason: "rejected",
+      message: ENROLL_REJECTED_MESSAGE,
+    };
+  }
+
   const parsedData = enrollValidationSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -109,6 +187,7 @@ export async function sendEnrollmentEmail(data: EnrollFormValues) {
 
       return {
         success: false,
+        reason: "failed",
         message: "Failed to send enrollment form. Please try again.",
       };
     }
@@ -129,6 +208,10 @@ export async function sendEnrollmentEmail(data: EnrollFormValues) {
     return { success: true, message: "Enrollment submitted successfully!" };
   } catch (error) {
     console.error("Server Action Error:", error);
-    return { success: false, message: "An unexpected error occurred." };
+    return {
+      success: false,
+      reason: "failed",
+      message: "An unexpected error occurred.",
+    };
   }
 }

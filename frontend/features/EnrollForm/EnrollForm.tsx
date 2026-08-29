@@ -19,9 +19,14 @@ import { Button, LinkButton } from "@/components/Button/Button";
 import { AddFamilyMemberDialog } from "./components/AddFamilyMemberDialog/AddFamilyMemberDialog";
 import { PersonalInformation } from "./components/PersonalInformation/PersonalInformation";
 import { getCountryOptions } from "@/utils/getCountryCodes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RequiredInputDescription } from "./components/RequiredInputDescription/RequiredInputDescription";
+import {
+  HONEYPOT_FIELD_NAME,
+  HoneypotField,
+} from "./components/HoneypotField/HoneypotField";
 import { sendEnrollmentEmail } from "@/actions/sendEnrollmentEmail";
+import { issueFormToken } from "@/actions/issueFormToken";
 
 interface EnrollFormProps {
   className?: string;
@@ -37,11 +42,40 @@ interface EnrollFormProps {
 export const EnrollForm = ({ className }: EnrollFormProps) => {
   const [successfullySubmitted, setSuccessfullySubmitted] = useState(false);
   const [errorWhileSubmitting, setErrorWhileSubmitting] = useState(false);
+  /**
+   * A refused submission, as opposed to a failed one. Rendered inline so the
+   * visitor keeps everything they typed -- see the comment on the
+   * `errorWhileSubmitting` branch below.
+   */
+  const [rejectionMessage, setRejectionMessage] = useState<null | string>(null);
   const [isAddFamilyMemberDialogOpen, setIsAddFamilyMemberDialogOpen] =
     useState(false);
   const [shouldUpdateFamilyMemberIndex, setShouldUpdateFamilyMemberIndex] =
     useState<null | number>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  /**
+   * Signed server-side and minted on mount rather than during render, because
+   * `/inschrijven` is statically prerendered -- see `issueFormToken`. Held in
+   * state rather than a ref because `onSubmit` closes over it, and a ref read
+   * from a handler built during render is exactly what `react-hooks/refs`
+   * forbids.
+   */
+  const [formToken, setFormToken] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    void issueFormToken().then((token) => {
+      if (isMounted) {
+        setFormToken(token);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const {
     register,
@@ -73,20 +107,33 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
     resolver: zodResolver(familyMemberValidationSchema),
   });
 
-  const onSubmit: SubmitHandler<EnrollFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<EnrollFormValues> = async (data, event) => {
+    // The honeypot is uncontrolled -- read straight off the submitted form
+    // rather than through a ref, for the same reason the token is state.
+    const form = event?.target;
+    const honeypot =
+      form instanceof HTMLFormElement
+        ? `${new FormData(form).get(HONEYPOT_FIELD_NAME) ?? ""}`
+        : "";
+
     setIsSubmitting(true);
+    setRejectionMessage(null);
     try {
-      const result = await sendEnrollmentEmail(data);
+      const result = await sendEnrollmentEmail(data, {
+        honeypot,
+        token: formToken,
+      });
 
       if (result.success) {
         setSuccessfullySubmitted(true);
-        setIsSubmitting(false);
+      } else if (result.reason === "rejected") {
+        setRejectionMessage(result.message);
       } else {
         setErrorWhileSubmitting(true);
-        setIsSubmitting(false);
       }
     } catch {
       setErrorWhileSubmitting(true);
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -120,6 +167,9 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
     );
   }
 
+  // Reserved for a send that actually broke. A *refused* submission must not
+  // land here: this branch replaces the form, and the visitor would lose every
+  // field plus every family member they entered.
   if (errorWhileSubmitting) {
     return (
       <div className="content-section flex flex-col gap-20">
@@ -148,6 +198,7 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
         noValidate
         className={twMerge("flex flex-col gap-40 lg:gap-60", className)}
       >
+        <HoneypotField />
         <PersonalInformation
           control={control}
           countryOptions={getCountryOptions()}
@@ -244,6 +295,11 @@ export const EnrollForm = ({ className }: EnrollFormProps) => {
             <FormErrors errors={errors}>
               Er zitten fouten in het formulier:
             </FormErrors>
+          )}
+          {rejectionMessage !== null && (
+            <p role="alert" className="typography-body text-red-700">
+              {rejectionMessage}
+            </p>
           )}
           <RequiredInputDescription />
         </div>

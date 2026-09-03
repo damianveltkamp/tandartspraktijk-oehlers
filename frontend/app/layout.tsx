@@ -100,12 +100,28 @@ export default async function RootLayout({
       latitude: 52.42891454569118,
       longitude: 4.926430487612518,
     },
+    // Confirmed with the practice: open Monday through Thursday around a closed
+    // hour over lunch, and closed Friday through Sunday. Schema.org has no
+    // "closed" marker, so a closed day is a zero-length window rather than an
+    // omission -- omitting it leaves Google to guess whether we simply forgot.
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday"],
         opens: "08:00",
+        closes: "12:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday"],
+        opens: "13:00",
         closes: "17:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Friday", "Saturday", "Sunday"],
+        opens: "00:00",
+        closes: "00:00",
       },
     ],
   };

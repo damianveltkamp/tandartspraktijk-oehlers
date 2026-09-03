@@ -5,8 +5,8 @@
  * `legalPage` is a repeatable document type whose URL lives in an editor-owned
  * `slug` field, so nothing in the type system ties `LEGAL_PAGES` to documents
  * that actually exist. The footer renders in the root layout, so a dataset
- * without those two documents -- a forgotten `studio/seed` import, or a slug
- * renamed despite the warning on the field -- puts a 404 link on every page of
+ * without those two documents -- a slug renamed despite the warning on the
+ * field, or a dataset that never had them -- puts a 404 link on every page of
  * the site. This turns that into a build failure instead.
  *
  * A Sanity outage is deliberately *not* a failure: it says nothing about the
@@ -66,7 +66,7 @@ if (missing.length > 0) {
   console.error(
     `[check-legal-pages] Ontbrekende juridische pagina's in dataset "${dataset}": ${missing.join(", ")}.\n` +
       `De footer en het inschrijfformulier linken hiernaar, dus zonder deze documenten staat er op elke pagina een dode link.\n` +
-      `Importeer ze vanuit studio/: npx sanity documents create seed/<slug>.json --replace`,
+      `Maak ze aan in de Studio onder "Juridische pagina", met exact deze URL('s).`,
   );
   process.exit(1);
 }

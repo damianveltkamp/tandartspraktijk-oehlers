@@ -6,7 +6,16 @@ type HomepageHeroData = NonNullable<GetHomepageQueryResult>["hero"];
 
 export const videoHeroAdapter = (data: HomepageHeroData | null | undefined) => {
   if (!data) return null;
-  const posterSrc = urlForImage(data.image.image).url();
+  // The poster goes on a bare `<video poster>` attribute, so it cannot pass
+  // through next/image the way the no-video fallback does — an untransformed
+  // URL would ship the full original upload ahead of first paint. It sits
+  // behind two scrims and is on screen only until the video's first frame
+  // decodes, so a modest width and quality are not noticeable.
+  const posterSrc = urlForImage(data.image.image)
+    .width(1600)
+    .quality(70)
+    .auto("format")
+    .url();
 
   const videoHeroData: VideoHeroProps = {
     title: data.heading,

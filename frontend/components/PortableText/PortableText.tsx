@@ -24,8 +24,12 @@ const isExternalHref = (href: string) => /^[a-z][a-z0-9+.-]*:/i.test(href);
  */
 const components: PortableTextComponents = {
   block: {
+    // `mt-40`, not `mt-35`: the spacing scale in `globals.css` is a set of
+    // discrete `--spacing-*` tokens with no 35, so `mt-35` fell through to
+    // Tailwind's dynamic scale and resolved to `calc(0.25rem * 35)` -- 140px,
+    // on top of the wrapper's 15px gap. Any value used here needs a token.
     h2: ({ children }) => (
-      <h2 className="typography-headline-2 mt-35 text-black first:mt-0">
+      <h2 className="typography-headline-2 mt-40 text-black first:mt-0">
         {children}
       </h2>
     ),

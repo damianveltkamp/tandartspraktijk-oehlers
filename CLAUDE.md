@@ -144,11 +144,15 @@ Tailwind v4 with `@config "../tailwind.config.ts"` in `app/globals.css`. Design 
 
 ## Dependency pins
 
-`package.json` (root) pins `@sanity/sdk-react` to `2.19.0` via `overrides`. `sanity@6` depends on
-`^2.19.0`, but `2.20.0` ships un-transpiled JSX in `dist/index.js`, which Vite 8's dependency
-optimizer rejects — it breaks both `sanity dev` and `sanity schema extract`. Re-check whether a later
-release fixes this before removing the pin, and note that npm may need `rm -rf node_modules
-package-lock.json && npm install` to actually apply a changed override.
+There are none. The root `package.json` used to pin `@sanity/sdk-react` to `2.19.0` via `overrides`,
+because `2.20.0` shipped un-transpiled JSX in `dist/index.js` and Vite 8's dependency optimizer
+rejected it, breaking both `sanity dev` and `sanity schema extract`. `sanity@6.12.0` depends on
+`@sanity/sdk-react@^3.0.0`, which resolves that — 3.0.0's `dist/index.js` parses, and `sanity schema
+extract`, `sanity build` and `next build` all succeed against it — so the override is gone and the
+two must move together: `sanity` below 6.12 cannot take sdk-react 3.
+
+If a pin is ever needed here again, note that npm may need `rm -rf node_modules package-lock.json &&
+npm install` to actually apply a changed or removed override; a plain `npm install` will not.
 
 Sanity 6 requires Node `>=22.12`. Studio v6 also enables React strict mode in dev by default
 (`reactStrictMode: false` in `sanity.cli.ts` opts out).

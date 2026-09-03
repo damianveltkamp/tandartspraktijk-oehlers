@@ -664,8 +664,7 @@ export type GetLegalPageSlugsQueryResult = Array<{
 }>;
 
 // Query TypeMap
-import "@sanity/client";
-declare module "@sanity/client" {
+declare global {
   interface SanityQueries {
     "*[_type == 'settings'][0]": SettingsQueryResult;
     "\n  *[_type == 'homePage'][0]{\n    \"phone\": contact.contactDetails[type == 'phone'][0]{linkText, href},\n  }\n": GetHeaderPhoneQueryResult;
@@ -675,4 +674,8 @@ declare module "@sanity/client" {
     "\n  *[_type == 'legalPage' && slug.current == $slug][0]{\n    _id,\n    _type,\n    title,\n    \"slug\": slug.current,\n    seoDescription,\n    body,\n  }\n": GetLegalPageQueryResult;
     "\n  *[_type == 'legalPage' && defined(slug.current)] | order(slug.current asc) {\n    \"slug\": slug.current,\n    _updatedAt,\n  }\n": GetLegalPageSlugsQueryResult;
   }
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module "@sanity/client" {
+  interface SanityQueries extends globalThis.SanityQueries {}
 }
